@@ -1,0 +1,85 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Data files (large)
+data/raw/*.h5
+data/raw/*.hdf5
+data/processed/*.h5
+data/processed/*.hdf5
+*.npy
+*.npz
+
+# Model checkpoints
+experiments/**/checkpoints/
+experiments/**/models/
+*.pth
+*.pt
+*.ckpt
+
+# Results
+experiments/**/runs/
+wandb/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Large result files
+*.zip
+*.tar.gz
+
+# Keep structure folders
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!experiments/baseline/.gitkeep
+!experiments/cnn/.gitkeep
+!experiments/analysis/.gitkeep
+
+*.PDF
+*.pdf

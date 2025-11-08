@@ -1,0 +1,42 @@
+# Core dependencies for Cellular Automata Neural Network Analysis
+# Python 3.8+
+
+# Deep Learning
+torch>=2.0.0
+torchvision>=0.15.0
+numpy>=1.24.0
+
+# Data Processing
+scipy>=1.10.0
+pillow>=9.5.0
+h5py>=3.8.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.14.0
+
+# Game of Life simulation
+# python-life-game>=0.1.0  # Will use custom implementation if not available
+
+# Symbolic Regression (for rule extraction)
+gplearn>=0.4.2
+sympy>=1.12
+
+# Utilities
+pyyaml>=6.0
+tqdm>=4.65.0
+pandas>=2.0.0
+
+# Experiment tracking (optional)
+tensorboard>=2.12.0
+wandb>=0.15.0
+
+# Testing
+pytest>=7.3.0
+pytest-cov>=4.1.0
+
+# Jupyter
+jupyter>=1.0.0
+ipykernel>=6.23.0
+
