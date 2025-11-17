@@ -41,12 +41,18 @@ data/raw/*.h5
 data/raw/*.hdf5
 data/processed/*.h5
 data/processed/*.hdf5
+data/processed_holdout/*.h5
+data/processed_holdout/*.hdf5
 *.npy
 *.npz
+*.pkl
 
-# Model checkpoints
+# Model checkpoints and weights
 experiments/**/checkpoints/
 experiments/**/models/
+experiments/**/*.pth
+experiments/**/*.pt
+experiments/**/*.ckpt
 *.pth
 *.pt
 *.ckpt
@@ -54,6 +60,7 @@ experiments/**/models/
 # Results
 experiments/**/runs/
 wandb/
+results/
 
 # Logs
 *.log
@@ -70,16 +77,32 @@ Thumbs.db
 *.swo
 *~
 
+# Scripts
+remove_large_files.sh
+
 # Large result files
 *.zip
 *.tar.gz
 
+# Generated figures and animations
+figures/samples/*.png
+figures/samples/*.gif
+figures/evaluation/*.png
+figures/evaluation/*.gif
+
+# Documents
+*.PDF
+*.pdf
+
+# JSON data files (keep configs but ignore data)
+data/holdout_patterns.json
+
 # Keep structure folders
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+!data/processed_holdout/.gitkeep
 !experiments/baseline/.gitkeep
 !experiments/cnn/.gitkeep
 !experiments/analysis/.gitkeep
-
-*.PDF
-*.pdf
+!figures/samples/.gitkeep
+!figures/evaluation/.gitkeep
