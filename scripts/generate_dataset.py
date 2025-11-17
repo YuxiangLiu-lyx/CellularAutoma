@@ -159,36 +159,24 @@ def save_pattern_dataset(file_path, pattern_data):
 
 def main():
     """Generate all datasets."""
-    
-    print("=" * 60)
     print("Game of Life Dataset Generation")
-    print("=" * 60)
     
-    # Configuration
     grid_size = (32, 32)
     density = 0.3
     num_train = 10000
     num_val = 2000
     num_test = 2000
     
-    # Use absolute path to project root
     project_root = Path(__file__).parent.parent
     output_dir = project_root / "data" / "processed"
     output_dir.mkdir(parents=True, exist_ok=True)
     
     gol = GameOfLife(grid_size)
     
-    print(f"\nConfiguration:")
-    print(f"  Grid size: {grid_size}")
-    print(f"  Density: {density}")
-    print(f"  Training samples: {num_train}")
-    print(f"  Validation samples: {num_val}")
-    print(f"  Test samples: {num_test}")
+    print(f"Grid: {grid_size}, Density: {density}")
+    print(f"Samples - Train: {num_train}, Val: {num_val}, Test: {num_test}\n")
     
-    # Generate training set
-    print("\n" + "=" * 60)
-    print("1. Generating training set (random states)...")
-    print("=" * 60)
+    print("Generating training set...")
     train_states = generate_random_states(num_train, grid_size, density, seed=42)
     train_t, train_t1 = generate_single_step_dataset(train_states, gol)
     
@@ -203,10 +191,7 @@ def main():
         }
     )
     
-    # Generate validation set
-    print("\n" + "=" * 60)
-    print("2. Generating validation set (random states)...")
-    print("=" * 60)
+    print("\nGenerating validation set...")
     val_states = generate_random_states(num_val, grid_size, density, seed=43)
     val_t, val_t1 = generate_single_step_dataset(val_states, gol)
     
@@ -221,10 +206,7 @@ def main():
         }
     )
     
-    # Generate test set (random)
-    print("\n" + "=" * 60)
-    print("3. Generating test set (random states)...")
-    print("=" * 60)
+    print("\nGenerating test set...")
     test_states = generate_random_states(num_test, grid_size, density, seed=44)
     test_t, test_t1 = generate_single_step_dataset(test_states, gol)
     
@@ -239,22 +221,11 @@ def main():
         }
     )
     
-    # Generate test set (patterns)
-    print("\n" + "=" * 60)
-    print("4. Generating test set (specific patterns)...")
-    print("=" * 60)
+    print("\nGenerating pattern test set...")
     pattern_data = generate_pattern_test_set(gol, grid_size, num_steps=50)
     save_pattern_dataset(output_dir / "test_patterns.h5", pattern_data)
     
-    # Summary
-    print("\n" + "=" * 60)
-    print("Dataset Generation Complete!")
-    print("=" * 60)
-    print(f"\nGenerated files in {output_dir.absolute()}:")
-    print(f"  - train.h5: {num_train} random samples")
-    print(f"  - val.h5: {num_val} random samples")
-    print(f"  - test_random.h5: {num_test} random samples")
-    print(f"  - test_patterns.h5: Specific patterns with 50-step trajectories")
+    print(f"\nComplete! Files saved to {output_dir.absolute()}")
 
 
 if __name__ == "__main__":

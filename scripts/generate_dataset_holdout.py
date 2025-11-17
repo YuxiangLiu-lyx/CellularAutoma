@@ -169,24 +169,19 @@ def save_dataset(file_path, states_t, states_t1, metadata=None):
 
 def main():
     """Generate holdout datasets."""
-    print("=" * 60)
     print("Holdout Dataset Generation")
-    print("=" * 60)
     
-    # Load holdout patterns
     project_root = Path(__file__).parent.parent
     holdout_file = project_root / "data" / "holdout_patterns.json"
     
     if not holdout_file.exists():
-        print(f"\nError: Holdout patterns file not found!")
-        print(f"Please run: python scripts/select_holdout_patterns.py")
+        print(f"\nError: Holdout patterns file not found at {holdout_file}")
         return
     
     holdout_patterns = load_holdout_patterns(holdout_file)
-    print(f"\nLoaded {len(holdout_patterns)} holdout patterns")
-    print(f"Training will use {512 - len(holdout_patterns)} patterns")
+    print(f"Loaded {len(holdout_patterns)} holdout patterns")
+    print(f"Training with {512 - len(holdout_patterns)} patterns\n")
     
-    # Configuration
     grid_size = (32, 32)
     density = 0.3
     num_train = 10000
@@ -197,16 +192,7 @@ def main():
     
     gol = GameOfLife(grid_size)
     
-    print(f"\nConfiguration:")
-    print(f"  Grid size: {grid_size}")
-    print(f"  Density: {density}")
-    print(f"  Training samples: {num_train}")
-    print(f"  Validation samples: {num_val}")
-    
-    # Generate training set
-    print("\n" + "=" * 60)
-    print("1. Generating training set (excluding holdout patterns)...")
-    print("=" * 60)
+    print("Generating training set (excluding holdout patterns)...")
     train_states = generate_random_states_holdout(
         num_train, grid_size, density, holdout_patterns, seed=42
     )
@@ -224,10 +210,7 @@ def main():
         }
     )
     
-    # Generate validation set
-    print("\n" + "=" * 60)
-    print("2. Generating validation set (excluding holdout patterns)...")
-    print("=" * 60)
+    print("\nGenerating validation set (excluding holdout patterns)...")
     val_states = generate_random_states_holdout(
         num_val, grid_size, density, holdout_patterns, seed=43
     )
@@ -245,12 +228,7 @@ def main():
         }
     )
     
-    print("\n" + "=" * 60)
-    print("Dataset Generation Complete!")
-    print("=" * 60)
-    print(f"\nGenerated files in {output_dir.absolute()}:")
-    print(f"  - train.h5: {num_train} samples (no holdout patterns)")
-    print(f"  - val.h5: {num_val} samples (no holdout patterns)")
+    print(f"\nComplete! Files saved to {output_dir.absolute()}")
 
 
 if __name__ == "__main__":

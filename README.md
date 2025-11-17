@@ -76,7 +76,7 @@ CellularAutoma/
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/YuxiangLiu-lyx/CellularAutoma
 cd CellularAutoma
 ```
 
@@ -84,14 +84,6 @@ cd CellularAutoma
 ```bash
 pip install -r requirements.txt
 ```
-
-Required packages:
-- `numpy` - Numerical computations
-- `torch` - Deep learning framework
-- `h5py` - HDF5 data storage
-- `matplotlib` - Visualization
-- `tqdm` - Progress bars
-- `scikit-learn` - Additional utilities
 
 ## Data Generation
 

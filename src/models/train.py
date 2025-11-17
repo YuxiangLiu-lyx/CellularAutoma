@@ -110,7 +110,6 @@ def train_model(model_type='simple', hidden_channels=16, num_layers=2,
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Using device: {device}")
     
-    # Create model
     if model_type == 'simple':
         model = GameOfLifeCNN(hidden_channels=hidden_channels)
     else:
@@ -118,11 +117,9 @@ def train_model(model_type='simple', hidden_channels=16, num_layers=2,
                                  num_layers=num_layers)
     
     model = model.to(device)
-    print(f"\nModel: {model_type}")
-    print(f"Parameters: {count_parameters(model):,}")
+    print(f"\nModel: {model_type}, Parameters: {count_parameters(model):,}")
     
-    # Create data loaders
-    print("\nLoading data...")
+    print("Loading data...")
     project_root = Path(__file__).parent.parent.parent
     train_path = project_root / data_dir / "train.h5"
     val_path = project_root / data_dir / "val.h5"
@@ -132,34 +129,23 @@ def train_model(model_type='simple', hidden_channels=16, num_layers=2,
     val_loader = create_dataloader(str(val_path),
                                   batch_size=batch_size, shuffle=False)
     
-    print(f"Training samples: {len(train_loader.dataset)}")
-    print(f"Validation samples: {len(val_loader.dataset)}")
+    print(f"Train: {len(train_loader.dataset)}, Val: {len(val_loader.dataset)}")
     
-    # Setup training
     criterion = nn.BCELoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     
-    # Training loop
-    print("\n" + "=" * 60)
-    print("Training")
-    print("=" * 60)
-    
+    print("\nTraining...")
     best_val_acc = 0.0
     
     for epoch in range(num_epochs):
         print(f"\nEpoch {epoch+1}/{num_epochs}")
         
-        # Train
         train_loss = train_epoch(model, train_loader, criterion, optimizer, device)
-        
-        # Evaluate
         val_results = evaluate(model, val_loader, criterion, device)
         
         print(f"  Train Loss: {train_loss:.4f}")
-        print(f"  Val Loss: {val_results['loss']:.4f}")
-        print(f"  Val Accuracy: {val_results['accuracy']:.4f}")
+        print(f"  Val Loss: {val_results['loss']:.4f}, Acc: {val_results['accuracy']:.4f}")
         
-        # Save best model
         if val_results['accuracy'] > best_val_acc:
             best_val_acc = val_results['accuracy']
             Path(save_path).parent.mkdir(parents=True, exist_ok=True)
@@ -170,12 +156,9 @@ def train_model(model_type='simple', hidden_channels=16, num_layers=2,
                 'val_accuracy': val_results['accuracy'],
                 'val_loss': val_results['loss'],
             }, save_path)
-            print(f"  Saved best model (acc: {best_val_acc:.4f})")
+            print(f"  ✓ Saved (best: {best_val_acc:.4f})")
     
-    print("\n" + "=" * 60)
-    print("Training Complete!")
-    print("=" * 60)
-    print(f"Best validation accuracy: {best_val_acc:.4f}")
+    print(f"\nTraining complete. Best accuracy: {best_val_acc:.4f}")
     print(f"Model saved to: {save_path}")
 
 
