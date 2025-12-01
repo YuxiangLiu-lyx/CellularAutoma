@@ -1,0 +1,87 @@
+{
+  "pruning_summary": {
+    "method": "L1 Regularization",
+    "date": "2025-11-29 13:39:21",
+    "lambda_l1": 0.001,
+    "threshold": 0.5,
+    "training_epochs": 7,
+    "validation_accuracy": 1.0
+  },
+  "architecture": {
+    "original_channels": 16,
+    "active_channels": 10,
+    "pruned_channels": 6,
+    "structure": "GameOfLifeCNN: 1\u219216(3x3) \u2192 16\u21921(1x1) with circular padding"
+  },
+  "channels": {
+    "active": [
+      0,
+      2,
+      3,
+      5,
+      8,
+      9,
+      10,
+      12,
+      14,
+      15
+    ],
+    "pruned": [
+      1,
+      4,
+      6,
+      7,
+      11,
+      13
+    ],
+    "l1_norms": {
+      "channel_0": 3.4198966026306152,
+      "channel_1": 0.3586350083351135,
+      "channel_2": 2.6781251430511475,
+      "channel_3": 0.9771916270256042,
+      "channel_4": 0.42611491680145264,
+      "channel_5": 0.5096758604049683,
+      "channel_6": 0.07702970504760742,
+      "channel_7": 0.000862770015373826,
+      "channel_8": 3.2657053470611572,
+      "channel_9": 2.9815268516540527,
+      "channel_10": 2.386212110519409,
+      "channel_11": 0.0013839791063219309,
+      "channel_12": 2.589386224746704,
+      "channel_13": 0.0006682362291030586,
+      "channel_14": 2.197033166885376,
+      "channel_15": 1.5691654682159424
+    }
+  },
+  "parameters": {
+    "total": 177,
+    "nonzero": 111,
+    "sparsity_percentage": 37.28813559322034
+  },
+  "comparison": {
+    "original_16ch": {
+      "parameters": 177,
+      "channels": 16,
+      "accuracy": "100%"
+    },
+    "pruned_l1": {
+      "parameters": 111,
+      "channels": 10,
+      "accuracy": "100.00%",
+      "reduction": "37.3%"
+    }
+  },
+  "key_findings": [
+    "L1 regularization (lambda=0.001) automatically identified 6 redundant channels",
+    "Only 10 channels are needed to achieve 100% accuracy",
+    "Parameter reduction: 37.3%",
+    "Pruned channels have L1 norms < 0.5, indicating minimal contribution",
+    "Active channels: [0, 2, 3, 5, 8, 9, 10, 12, 14, 15]",
+    "Pruned channels: [1, 4, 6, 7, 11, 13]"
+  ],
+  "usage": {
+    "load_model": "checkpoint = torch.load('model.pth')",
+    "active_channels": "checkpoint['active_channels']",
+    "pruned_channels": "checkpoint['pruned_channels']"
+  }
+}

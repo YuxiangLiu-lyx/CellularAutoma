@@ -70,12 +70,15 @@ def create_dataloader(h5_path, batch_size=32, shuffle=True, num_workers=0):
         DataLoader object
     """
     dataset = GameOfLifeDataset(h5_path)
+    
+    pin_memory = torch.cuda.is_available()
+    
     loader = DataLoader(
         dataset,
         batch_size=batch_size,
         shuffle=shuffle,
         num_workers=num_workers,
-        pin_memory=True if torch.cuda.is_available() else False
+        pin_memory=pin_memory
     )
     return loader
 

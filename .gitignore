@@ -74,12 +74,8 @@ Thumbs.db
 *.zip
 *.tar.gz
 
-# Keep structure folders
-!data/raw/.gitkeep
-!data/processed/.gitkeep
-!experiments/baseline/.gitkeep
-!experiments/cnn/.gitkeep
-!experiments/analysis/.gitkeep
-
 *.PDF
 *.pdf
+
+# Documentation
+doc/

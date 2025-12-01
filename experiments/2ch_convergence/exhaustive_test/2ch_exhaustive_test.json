@@ -1,0 +1,9 @@
+{
+  "model": "run_01_seed_300.pth",
+  "hidden_channels": 2,
+  "total_patterns": 512,
+  "correct": 512,
+  "errors": 0,
+  "accuracy": 1.0,
+  "error_patterns": []
+}

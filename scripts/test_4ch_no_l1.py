@@ -1,0 +1,390 @@
+"""
+Test 4-channel CNN convergence WITHOUT L1 regularization.
+Train 30 runs to see if 4 channels can reach 100% accuracy without L1.
+"""
+import sys
+from pathlib import Path
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from tqdm import tqdm
+import numpy as np
+import json
+from datetime import datetime
+
+sys.path.append(str(Path(__file__).parent.parent))
+
+from src.models.cnn import GameOfLifeCNN, count_parameters
+from src.utils.data_loader import create_dataloader
+
+
+def set_seed(seed):
+    """Set random seed for reproducibility."""
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+    if torch.backends.mps.is_available():
+        torch.mps.manual_seed(seed)
+
+
+def train_one_run(run_id, seed, train_loader, val_loader, criterion, device, 
+                  max_epochs=100, target_accuracy=1.0, save_dir=None):
+    """
+    Train one 4-channel model run WITHOUT L1 regularization.
+    
+    Args:
+        run_id: Run identifier
+        seed: Random seed
+        train_loader: Training data loader
+        val_loader: Validation data loader
+        criterion: Loss function
+        device: Computing device
+        max_epochs: Maximum training epochs
+        target_accuracy: Target accuracy to reach
+        save_dir: Directory to save model
+        
+    Returns:
+        Dictionary with run results
+    """
+    print(f"\n{'='*70}")
+    print(f"Run {run_id}/30 (seed={seed})")
+    print(f"{'='*70}")
+    
+    set_seed(seed)
+    
+    # Create 4-channel model
+    model = GameOfLifeCNN(hidden_channels=4, padding_mode='circular')
+    model = model.to(device)
+    
+    num_params = count_parameters(model)
+    print(f"Parameters: {num_params}")
+    
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    
+    best_val_acc = 0
+    convergence_epoch = -1
+    epoch_history = []
+    
+    for epoch in range(max_epochs):
+        model.train()
+        train_loss = 0
+        train_correct = 0
+        train_total = 0
+        
+        for state_t, state_t1 in train_loader:
+            state_t = state_t.to(device)
+            state_t1 = state_t1.to(device)
+            
+            optimizer.zero_grad()
+            output = model(state_t)
+            
+            # NO L1 regularization - only BCE loss
+            loss = criterion(output, state_t1)
+            
+            loss.backward()
+            optimizer.step()
+            
+            train_loss += loss.item()
+            pred = (output > 0.5).float()
+            train_correct += (pred == state_t1).sum().item()
+            train_total += state_t1.numel()
+        
+        train_loss = train_loss / len(train_loader)
+        train_acc = train_correct / train_total
+        
+        model.eval()
+        val_loss = 0
+        val_correct = 0
+        val_total = 0
+        
+        with torch.no_grad():
+            for state_t, state_t1 in val_loader:
+                state_t = state_t.to(device)
+                state_t1 = state_t1.to(device)
+                
+                output = model(state_t)
+                loss = criterion(output, state_t1)
+                
+                val_loss += loss.item()
+                pred = (output > 0.5).float()
+                val_correct += (pred == state_t1).sum().item()
+                val_total += state_t1.numel()
+        
+        val_loss = val_loss / len(val_loader)
+        val_acc = val_correct / val_total
+        
+        epoch_history.append({
+            'epoch': epoch + 1,
+            'train_loss': train_loss,
+            'train_acc': train_acc,
+            'val_loss': val_loss,
+            'val_acc': val_acc
+        })
+        
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+        
+        if (epoch + 1) % 10 == 0 or val_acc >= target_accuracy:
+            print(f"  Epoch {epoch+1}: Val Acc = {val_acc:.6f}")
+        
+        if val_acc >= target_accuracy and convergence_epoch == -1:
+            convergence_epoch = epoch + 1
+            print(f"  ✓ Converged at epoch {convergence_epoch}")
+            
+            if save_dir:
+                model_path = save_dir / f"run_{run_id:02d}_seed_{seed}.pth"
+                torch.save({
+                    'run_id': run_id,
+                    'seed': seed,
+                    'hidden_channels': 4,
+                    'convergence_epoch': convergence_epoch,
+                    'model_state_dict': model.state_dict(),
+                    'val_accuracy': val_acc,
+                }, model_path)
+            
+            break
+    
+    if convergence_epoch == -1:
+        print(f"  ✗ Did not converge (best: {best_val_acc:.6f})")
+    
+    return {
+        'run_id': run_id,
+        'seed': seed,
+        'converged': convergence_epoch != -1,
+        'convergence_epoch': convergence_epoch,
+        'best_val_acc': float(best_val_acc),
+        'epoch_history': epoch_history
+    }
+
+
+def main():
+    """Main experiment function."""
+    project_root = Path(__file__).parent.parent
+    data_dir = project_root / "data" / "processed"
+    
+    output_dir = project_root / "experiments" / "4ch_no_l1"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    models_dir = output_dir / "models"
+    models_dir.mkdir(parents=True, exist_ok=True)
+    
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    else:
+        device = torch.device('cpu')
+    
+    print("="*70)
+    print("4-Channel CNN Convergence Test (NO L1 Regularization)")
+    print("="*70)
+    print(f"Device: {device}")
+    print(f"Configuration:")
+    print(f"  - Architecture: 4-channel CNN")
+    print(f"  - L1 regularization: NONE (testing pure capacity)")
+    print(f"  - Number of runs: 30")
+    print(f"  - Max epochs per run: 100")
+    print(f"  - Target accuracy: 100%")
+    print(f"\nOutput directory: {output_dir}")
+    
+    train_loader = create_dataloader(
+        data_dir / "train.h5",
+        batch_size=64,
+        shuffle=True
+    )
+    
+    val_loader = create_dataloader(
+        data_dir / "val.h5",
+        batch_size=64,
+        shuffle=False
+    )
+    
+    criterion = nn.BCELoss()
+    num_runs = 30
+    
+    base_seed = 42
+    seeds = [base_seed + i * 100 for i in range(num_runs)]
+    
+    print(f"\nStarting {num_runs} training runs...")
+    print(f"Seeds: {seeds[0]} to {seeds[-1]}")
+    
+    results = []
+    start_time = datetime.now()
+    
+    for i, seed in enumerate(seeds, 1):
+        result = train_one_run(
+            run_id=i,
+            seed=seed,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            criterion=criterion,
+            device=device,
+            max_epochs=100,
+            target_accuracy=1.0,
+            save_dir=models_dir
+        )
+        results.append(result)
+    
+    end_time = datetime.now()
+    total_time = (end_time - start_time).total_seconds()
+    
+    print("\n" + "="*70)
+    print("RESULTS SUMMARY")
+    print("="*70)
+    
+    convergence_epochs = [r['convergence_epoch'] for r in results if r['converged']]
+    converged_count = len(convergence_epochs)
+    
+    print(f"\nConverged: {converged_count}/30 runs")
+    
+    if convergence_epochs:
+        print(f"\nConvergence Statistics:")
+        print(f"  Mean:   {np.mean(convergence_epochs):.1f} epochs")
+        print(f"  Median: {np.median(convergence_epochs):.1f} epochs")
+        print(f"  Std:    {np.std(convergence_epochs):.1f} epochs")
+        print(f"  Min:    {np.min(convergence_epochs)} epochs")
+        print(f"  Max:    {np.max(convergence_epochs)} epochs")
+        
+        print(f"\nDistribution:")
+        bins = [0, 10, 20, 30, 50, 100]
+        for i in range(len(bins)-1):
+            count = sum(1 for e in convergence_epochs if bins[i] < e <= bins[i+1])
+            if count > 0:
+                print(f"  {bins[i]+1}-{bins[i+1]} epochs: {count} runs")
+    
+    print(f"\nDetailed Results:")
+    print(f"{'Run':<6} {'Seed':<8} {'Converged':<12} {'Epoch':<10} {'Best Acc':<12}")
+    print("-" * 70)
+    
+    for r in results:
+        converged = "Yes" if r['converged'] else "No"
+        epoch = r['convergence_epoch'] if r['converged'] else "-"
+        print(f"{r['run_id']:<6} {r['seed']:<8} {converged:<12} {str(epoch):<10} {r['best_val_acc']:.6f}")
+    
+    # Save summary
+    summary = {
+        'experiment': {
+            'name': '4-Channel CNN Convergence Test (No L1)',
+            'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'total_time_seconds': total_time,
+        },
+        'configuration': {
+            'architecture': '4-channel CNN',
+            'l1_regularization': 'NONE',
+            'num_runs': num_runs,
+            'max_epochs': 100,
+            'target_accuracy': 1.0,
+        },
+        'statistics': {
+            'converged_runs': converged_count,
+            'total_runs': num_runs,
+            'convergence_rate': converged_count / num_runs,
+            'mean_convergence_epoch': float(np.mean(convergence_epochs)) if convergence_epochs else None,
+            'median_convergence_epoch': float(np.median(convergence_epochs)) if convergence_epochs else None,
+            'std_convergence_epoch': float(np.std(convergence_epochs)) if convergence_epochs else None,
+            'min_convergence_epoch': int(np.min(convergence_epochs)) if convergence_epochs else None,
+            'max_convergence_epoch': int(np.max(convergence_epochs)) if convergence_epochs else None,
+        },
+        'results': results
+    }
+    
+    summary_path = output_dir / "summary.json"
+    with open(summary_path, 'w') as f:
+        json.dump(summary, f, indent=2)
+    
+    print(f"\nSummary saved to: {summary_path}")
+    
+    # Create README
+    readme_path = output_dir / "README.md"
+    with open(readme_path, 'w') as f:
+        f.write(f"# 4-Channel CNN Convergence Test (No L1 Regularization)\n\n")
+        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        
+        f.write(f"## Experiment Design\n\n")
+        f.write(f"- **Objective**: Test if 4-channel CNN can reach 100% accuracy WITHOUT L1 regularization\n")
+        f.write(f"- **Hypothesis**: Maybe L1 is not necessary, just need enough training epochs\n")
+        f.write(f"- **Configuration**: No L1 regularization, only BCE loss\n")
+        f.write(f"- **Number of runs**: 30\n")
+        f.write(f"- **Seeds**: {seeds[0]} to {seeds[-1]}\n\n")
+        
+        f.write(f"## Results\n\n")
+        f.write(f"- **Convergence rate**: {converged_count}/30 ({converged_count/30*100:.1f}%)\n")
+        
+        if convergence_epochs:
+            f.write(f"- **Mean convergence**: {np.mean(convergence_epochs):.1f} epochs\n")
+            f.write(f"- **Median convergence**: {np.median(convergence_epochs):.1f} epochs\n")
+            f.write(f"- **Range**: {np.min(convergence_epochs)}-{np.max(convergence_epochs)} epochs\n")
+            f.write(f"- **Std deviation**: {np.std(convergence_epochs):.1f} epochs\n\n")
+            
+            f.write(f"## Analysis\n\n")
+            if converged_count == 30:
+                f.write(f"**✓ SUCCESS**: All 30 runs converged WITHOUT L1 regularization!\n\n")
+                f.write(f"This proves that:\n")
+                f.write(f"- **L1 regularization is NOT necessary** for 4 channels\n")
+                f.write(f"- The key was **insufficient training epochs** (20 vs 100)\n")
+                f.write(f"- 4-channel CNN has enough capacity for this task\n")
+                f.write(f"- Average convergence: {np.mean(convergence_epochs):.1f} epochs\n")
+            elif converged_count >= 25:
+                f.write(f"**Mostly successful**: {converged_count}/30 runs converged.\n\n")
+                f.write(f"This suggests:\n")
+                f.write(f"- **L1 may help but is not critical**\n")
+                f.write(f"- Most initializations can reach 100% without L1\n")
+                f.write(f"- Some unlucky initializations may benefit from L1\n")
+            elif converged_count >= 15:
+                f.write(f"**Mixed results**: {converged_count}/30 runs converged.\n\n")
+                f.write(f"This suggests:\n")
+                f.write(f"- **L1 regularization does help significantly**\n")
+                f.write(f"- Without L1, success depends heavily on initialization\n")
+                f.write(f"- L1 provides more stable/reliable convergence\n")
+            else:
+                f.write(f"**Limited success**: Only {converged_count}/30 runs converged.\n\n")
+                f.write(f"This proves:\n")
+                f.write(f"- **L1 regularization is important** for 4 channels\n")
+                f.write(f"- Without L1, convergence is unreliable\n")
+                f.write(f"- L1 helps the small model learn effectively\n")
+        else:
+            f.write(f"\n**FAILED**: No runs converged WITHOUT L1.\n\n")
+            f.write(f"This proves L1 regularization is **essential** for 4-channel models.\n")
+        
+        f.write(f"\n## Comparison with L1 Regularization\n\n")
+        f.write(f"To compare, run the test with L1 (lambda=0.001):\n")
+        f.write(f"```bash\n")
+        f.write(f"python scripts/test_4ch_convergence.py\n")
+        f.write(f"```\n\n")
+        
+        f.write(f"## Files\n\n")
+        f.write(f"- `summary.json` - Complete experimental data\n")
+        f.write(f"- `models/` - Saved models from successful runs\n")
+        f.write(f"- `README.md` - This file\n")
+    
+    print(f"README saved to: {readme_path}")
+    
+    print("\n" + "="*70)
+    print("Experiment Complete")
+    print("="*70)
+    print(f"Total time: {total_time/60:.1f} minutes")
+    print(f"All results saved to: {output_dir}")
+    
+    # Print conclusion
+    print("\n" + "="*70)
+    print("CONCLUSION: L1 Regularization Impact")
+    print("="*70)
+    if converged_count == 30:
+        print("✓ L1 is NOT necessary - all runs converged without it!")
+        print(f"  The issue was just insufficient training epochs (20 vs 100)")
+        print(f"  Average convergence: {np.mean(convergence_epochs):.1f} epochs")
+    elif converged_count >= 25:
+        print(f"⚠ L1 helps but is not critical - {converged_count}/30 converged")
+        print(f"  L1 may provide more stable convergence")
+    elif converged_count >= 15:
+        print(f"⚠ L1 is beneficial - only {converged_count}/30 converged without it")
+        print(f"  L1 significantly improves convergence reliability")
+    else:
+        print(f"✗ L1 is important - only {converged_count}/30 converged without it")
+        print(f"  L1 regularization helps 4-channel models learn effectively")
+    print("="*70)
+
+
+if __name__ == "__main__":
+    main()
