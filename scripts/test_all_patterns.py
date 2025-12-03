@@ -121,10 +121,10 @@ def test_model_exhaustive(model, device):
 def analyze_errors(errors):
     """Analyze and display error patterns."""
     if not errors:
-        print("\n✓✓✓ NO ERRORS - Perfect on all 512 patterns!")
+        print("\nNo errors - perfect on all 512 patterns")
         return
     
-    print(f"\n✗ Found {len(errors)} errors out of 512 patterns")
+    print(f"\nFound {len(errors)} errors out of 512 patterns")
     print(f"  Error rate: {len(errors)/512*100:.2f}%")
     
     print("\n" + "="*70)
@@ -255,7 +255,7 @@ def test_specific_cases(model, device):
             prediction = 1 if center_output > 0.5 else 0
         
         correct = (prediction == expected)
-        status = "✓" if correct else "✗"
+        status = "OK" if correct else "FAIL"
         all_correct = all_correct and correct
         
         print(f"\n{status} {case['name']}")
@@ -266,7 +266,7 @@ def test_specific_cases(model, device):
         print(f"  Model output: {center_output:.6f}")
         
         if not correct:
-            print(f"  ✗ ERROR!")
+            print(f"  ERROR!")
     
     return all_correct
 
@@ -343,16 +343,16 @@ def main():
     print("="*70)
     
     if accuracy == 1.0:
-        print("✓✓✓ PERFECT: Model correctly predicts ALL 512 patterns!")
+        print("Model correctly predicts all 512 patterns")
         print(f"    The {checkpoint['hidden_channels']}-channel CNN has fully learned Game of Life rules!")
     elif accuracy >= 0.99:
-        print(f"✓✓ Excellent: {accuracy*100:.2f}% accuracy")
+        print(f"Excellent: {accuracy*100:.2f}% accuracy")
         print(f"   Only {len(errors)} errors out of 512 patterns")
     elif accuracy >= 0.95:
-        print(f"✓ Good: {accuracy*100:.2f}% accuracy")
+        print(f"Good: {accuracy*100:.2f}% accuracy")
         print(f"   {len(errors)} errors need investigation")
     else:
-        print(f"✗ Needs improvement: {accuracy*100:.2f}% accuracy")
+        print(f"Needs improvement: {accuracy*100:.2f}% accuracy")
         print(f"   {len(errors)} errors - model hasn't fully learned the rules")
     
     print("\n" + "="*70)

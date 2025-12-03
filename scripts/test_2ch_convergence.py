@@ -1,6 +1,6 @@
 """
 Test 2-channel CNN convergence with L1 regularization.
-Train 10 runs to test the absolute minimum architecture.
+Train 5 runs to test the absolute minimum architecture.
 """
 import sys
 from pathlib import Path
@@ -37,9 +37,9 @@ def compute_l1_loss(model, lambda_l1):
 
 
 def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, device, 
-                  max_epochs=100, target_accuracy=1.0, save_dir=None):
+                  max_epochs=100, target_accuracy=1.0, save_dir=None, patience=20):
     """
-    Train one 2-channel model run.
+    Train one 2-channel model run with L1 regularization.
     
     Args:
         run_id: Run identifier
@@ -52,12 +52,13 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
         max_epochs: Maximum training epochs
         target_accuracy: Target accuracy to reach
         save_dir: Directory to save model
+        patience: Early stopping patience (epochs without improvement)
         
     Returns:
         Dictionary with run results
     """
     print(f"\n{'='*70}")
-    print(f"Run {run_id}/10 (seed={seed})")
+    print(f"Run {run_id}/5 (seed={seed})")
     print(f"{'='*70}")
     
     set_seed(seed)
@@ -74,6 +75,7 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
     best_val_acc = 0
     convergence_epoch = -1
     epoch_history = []
+    epochs_without_improvement = 0
     
     for epoch in range(max_epochs):
         model.train()
@@ -140,15 +142,20 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
             'val_acc': val_acc
         })
         
+        # Check for improvement
         if val_acc > best_val_acc:
             best_val_acc = val_acc
+            epochs_without_improvement = 0
+        else:
+            epochs_without_improvement += 1
         
         if (epoch + 1) % 10 == 0 or val_acc >= target_accuracy:
             print(f"  Epoch {epoch+1}: Train Acc = {train_acc:.6f}, Val Acc = {val_acc:.6f}, L1 = {train_l1_loss:.6f}")
         
+        # Check convergence
         if val_acc >= target_accuracy and convergence_epoch == -1:
             convergence_epoch = epoch + 1
-            print(f"  ✓ Converged at epoch {convergence_epoch}")
+            print(f"  Converged at epoch {convergence_epoch}")
             
             if save_dir:
                 model_path = save_dir / f"run_{run_id:02d}_seed_{seed}.pth"
@@ -163,9 +170,15 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
                 }, model_path)
             
             break
+        
+        # Early stopping
+        if epochs_without_improvement >= patience:
+            print(f"  Early stopping at epoch {epoch+1} (no improvement for {patience} epochs)")
+            print(f"    Best val acc: {best_val_acc:.6f}")
+            break
     
     if convergence_epoch == -1:
-        print(f"  ✗ Did not converge (best: {best_val_acc:.6f})")
+        print(f"  Did not converge (best: {best_val_acc:.6f})")
     
     # Analyze channel weights
     conv1_weights = model.conv1.weight.data.cpu().numpy()
@@ -181,7 +194,8 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
         'convergence_epoch': convergence_epoch,
         'best_val_acc': float(best_val_acc),
         'channel_l1_norms': channel_l1_norms,
-        'epoch_history': epoch_history
+        'epoch_history': epoch_history,
+        'stopped_early': epochs_without_improvement >= patience and convergence_epoch == -1
     }
 
 
@@ -208,10 +222,11 @@ def main():
     print("="*70)
     print(f"Device: {device}")
     print(f"Configuration:")
-    print(f"  - Architecture: 2-channel CNN (ABSOLUTE MINIMUM)")
+    print(f"  - Architecture: 2-channel CNN")
     print(f"  - L1 regularization: lambda=0.001")
-    print(f"  - Number of runs: 10")
+    print(f"  - Number of runs: 5")
     print(f"  - Max epochs per run: 100")
+    print(f"  - Early stopping patience: 20 epochs")
     print(f"  - Target accuracy: 100%")
     print(f"\nOutput directory: {output_dir}")
     
@@ -232,7 +247,7 @@ def main():
     
     criterion = nn.BCELoss()
     lambda_l1 = 0.001
-    num_runs = 10
+    num_runs = 5
     
     # Use different seeds for diversity
     base_seed = 300
@@ -255,7 +270,8 @@ def main():
             device=device,
             max_epochs=100,
             target_accuracy=1.0,
-            save_dir=models_dir
+            save_dir=models_dir,
+            patience=20
         )
         results.append(result)
     
@@ -268,8 +284,10 @@ def main():
     
     convergence_epochs = [r['convergence_epoch'] for r in results if r['converged']]
     converged_count = len(convergence_epochs)
+    early_stopped = sum(1 for r in results if r.get('stopped_early', False))
     
-    print(f"\nConverged: {converged_count}/10 runs")
+    print(f"\nConverged: {converged_count}/5 runs")
+    print(f"Early stopped (no hope): {early_stopped}/5 runs")
     
     if convergence_epochs:
         print(f"\nConvergence Statistics:")
@@ -287,13 +305,15 @@ def main():
                 print(f"  {bins[i]+1}-{bins[i+1]} epochs: {count} runs")
     
     print(f"\nDetailed Results:")
-    print(f"{'Run':<6} {'Seed':<8} {'Converged':<12} {'Epoch':<10} {'Best Acc':<12}")
+    print(f"{'Run':<6} {'Seed':<8} {'Converged':<12} {'Epoch':<10} {'Best Acc':<12} {'Early Stop':<12}")
     print("-" * 70)
     
     for r in results:
         converged = "Yes" if r['converged'] else "No"
         epoch = r['convergence_epoch'] if r['converged'] else "-"
-        print(f"{r['run_id']:<6} {r['seed']:<8} {converged:<12} {str(epoch):<10} {r['best_val_acc']:.6f}")
+        early = "Yes" if r.get('stopped_early', False) else "No"
+        print(f"{r['run_id']:<6} {r['seed']:<8} {converged:<12} {str(epoch):<10} "
+              f"{r['best_val_acc']:.6f}    {early:<12}")
     
     # Analyze channel usage
     print(f"\n{'='*70}")
@@ -325,11 +345,13 @@ def main():
             'lambda_l1': lambda_l1,
             'num_runs': num_runs,
             'max_epochs': 100,
+            'early_stopping_patience': 20,
             'target_accuracy': 1.0,
             'seeds': seeds,
         },
         'statistics': {
             'converged_runs': converged_count,
+            'early_stopped_runs': early_stopped,
             'total_runs': num_runs,
             'convergence_rate': converged_count / num_runs,
             'mean_convergence_epoch': float(np.mean(convergence_epochs)) if convergence_epochs else None,
@@ -356,14 +378,14 @@ def main():
         f.write(f"## Experiment Design\n\n")
         f.write(f"- **Objective**: Test if 2-channel CNN (absolute minimum) can reach 100% accuracy\n")
         f.write(f"- **Motivation**: Find the absolute theoretical minimum - can just 2 channels solve Game of Life?\n")
-        f.write(f"- **Configuration**: lambda_l1 = 0.001\n")
-        f.write(f"- **Number of runs**: 10\n")
+        f.write(f"- **Configuration**: lambda_l1 = 0.001, early stopping patience = 20\n")
+        f.write(f"- **Number of runs**: 5\n")
         f.write(f"- **Seeds**: {seeds[0]} to {seeds[-1]}\n")
         f.write(f"- **Parameters per model**: ~15 (2 channels × 3×3 kernel + biases)\n")
         f.write(f"- **Parameter reduction**: ~91.5% vs standard 16-channel (177 params)\n\n")
         
         f.write(f"## Results\n\n")
-        f.write(f"- **Convergence rate**: {converged_count}/10 ({converged_count/10*100:.1f}%)\n")
+        f.write(f"- **Convergence rate**: {converged_count}/5 ({converged_count/5*100:.1f}%)\n")
         
         if convergence_epochs:
             f.write(f"- **Mean convergence**: {np.mean(convergence_epochs):.1f} epochs\n")
@@ -383,36 +405,20 @@ def main():
                 f.write(f"This shows how both channels are being utilized in successful runs.\n\n")
             
             f.write(f"## Analysis\n\n")
-            if converged_count == 10:
-                f.write(f"**✓✓✓ EXTRAORDINARY SUCCESS**: All 10 runs converged!\n\n")
-                f.write(f"2 channels are **sufficient** for Game of Life! This is groundbreaking:\n")
-                f.write(f"- **Theoretical minimum** architecture achieved\n")
-                f.write(f"- Only ~15 parameters solve the entire problem\n")
-                f.write(f"- **91.5% parameter reduction** from 16-channel baseline\n")
-                f.write(f"- Each channel must encode essential rule components\n")
-                f.write(f"- Proves Game of Life rules can be learned with minimal capacity\n\n")
-                f.write(f"### Implications\n")
-                f.write(f"- 2 channels might represent: (1) center cell state, (2) neighbor count\n")
-                f.write(f"- Or: (1) survival condition, (2) birth condition\n")
-                f.write(f"- Perfect alignment with Game of Life's binary decision structure\n")
-            elif converged_count >= 7:
-                f.write(f"**Strong results**: {converged_count}/10 runs converged.\n\n")
-                f.write(f"2 channels are **nearly sufficient** but sensitive to initialization:\n")
-                f.write(f"- Most runs succeed with proper initialization\n")
-                f.write(f"- May benefit from better initialization schemes\n")
-                f.write(f"- 3 channels might be more robust for production use\n")
-            elif converged_count >= 4:
-                f.write(f"**Partial success**: {converged_count}/10 runs converged.\n\n")
-                f.write(f"2 channels are **theoretically possible but unreliable**:\n")
-                f.write(f"- Shows capacity exists but training is unstable\n")
-                f.write(f"- Would need careful initialization and hyperparameter tuning\n")
-                f.write(f"- Recommend 3-4 channels for practical applications\n")
+            if converged_count == 5:
+                f.write(f"All 5 runs converged.\n\n")
+                f.write(f"2 channels are sufficient for Game of Life:\n")
+                f.write(f"- Minimal architecture achieved (~15 parameters)\n")
+                f.write(f"- 91.5% parameter reduction from 16-channel baseline\n\n")
+            elif converged_count >= 3:
+                f.write(f"{converged_count}/5 runs converged.\n\n")
+                f.write(f"2 channels are nearly sufficient but sensitive to initialization.\n")
+            elif converged_count >= 2:
+                f.write(f"{converged_count}/5 runs converged.\n\n")
+                f.write(f"2 channels are possible but unreliable. Consider 3-4 channels.\n")
             else:
-                f.write(f"**Limited success**: Only {converged_count}/10 runs converged.\n\n")
-                f.write(f"2 channels appear **insufficient for reliable training**:\n")
-                f.write(f"- May be at or below theoretical minimum\n")
-                f.write(f"- Success cases could be lucky initializations\n")
-                f.write(f"- Recommend at least 3-4 channels for stable results\n")
+                f.write(f"Only {converged_count}/5 runs converged.\n\n")
+                f.write(f"2 channels may be insufficient for reliable training.\n")
         else:
             f.write(f"\n**FAILED**: No runs converged to 100% accuracy.\n\n")
             f.write(f"2 channels are **below the minimum** required capacity.\n")
@@ -448,18 +454,14 @@ def main():
         f.write(f"- `README.md` - This file\n\n")
         
         f.write(f"## Next Steps\n\n")
-        if converged_count >= 8:
-            f.write(f"- ✓ 2 channels work! This is the minimum viable architecture\n")
-            f.write(f"- Analyze learned weights to understand what each channel represents\n")
-            f.write(f"- Test if we can initialize specifically for center/neighbor extraction\n")
-        elif converged_count >= 4:
-            f.write(f"- 2 channels are marginal - investigate successful vs failed runs\n")
-            f.write(f"- Compare weight initialization patterns\n")
-            f.write(f"- 3 channels recommended for reliable performance\n")
+        if converged_count >= 4:
+            f.write(f"- Analyze learned weights\n")
+            f.write(f"- Test different initialization schemes\n")
+        elif converged_count >= 2:
+            f.write(f"- Investigate successful vs failed runs\n")
+            f.write(f"- Consider 3 channels for reliable performance\n")
         else:
-            f.write(f"- 2 channels appear insufficient\n")
-            f.write(f"- 3 channels likely the practical minimum\n")
-            f.write(f"- Focus optimization efforts on 3-4 channel architectures\n")
+            f.write(f"- Consider 3+ channels for reliable training\n")
     
     print(f"README saved to: {readme_path}")
     
@@ -469,26 +471,20 @@ def main():
     print(f"Total time: {total_time/60:.1f} minutes")
     print(f"All results saved to: {output_dir}")
     
-    # Print conclusion
     print("\n" + "="*70)
     print("CONCLUSION")
     print("="*70)
-    if converged_count == 10:
-        print("✓✓✓ 2 CHANNELS ARE SUFFICIENT - THEORETICAL MINIMUM FOUND!")
-        print(f"    All runs converged with just 2 channels (~15 params)")
-        print(f"    Average convergence: {np.mean(convergence_epochs):.1f} epochs")
-        print(f"    This is an extraordinary result!")
-    elif converged_count >= 7:
-        print(f"✓ 2 channels are NEARLY SUFFICIENT - {converged_count}/10 converged")
-        print(f"  Close to theoretical minimum, needs initialization tuning")
-    elif converged_count >= 4:
-        print(f"⚠ 2 channels are AT THE LIMIT - {converged_count}/10 converged")
-        print(f"  Theoretically possible but unreliable")
-        print(f"  Recommend 3 channels for practical use")
+    if converged_count == 5:
+        print(f"2 channels sufficient: all runs converged (~15 params)")
+        print(f"Average convergence: {np.mean(convergence_epochs):.1f} epochs")
+    elif converged_count >= 3:
+        print(f"2 channels nearly sufficient: {converged_count}/5 converged")
+    elif converged_count >= 2:
+        print(f"2 channels marginal: {converged_count}/5 converged")
+        print(f"Consider 3 channels for reliability")
     else:
-        print(f"✗ 2 channels are INSUFFICIENT - only {converged_count}/10 converged")
-        print(f"  Below minimum capacity threshold")
-        print(f"  Minimum is likely 3 channels")
+        print(f"2 channels insufficient: only {converged_count}/5 converged")
+        print(f"Recommend 3+ channels")
     print("="*70)
 
 

@@ -63,7 +63,7 @@ def main():
             print(f"  False Positives: {len(false_positives)}")
             print(f"  False Negatives: {len(false_negatives)}")
         else:
-            print("\n✓ PERFECT - No errors!")
+            print("\nNo errors")
         
         # Test specific cases (brief)
         print(f"\nKey test cases:")
@@ -86,7 +86,7 @@ def main():
                 center_output = output[0, 0, 1, 1].item()
                 prediction = 1 if center_output > 0.5 else 0
             
-            status = "✓" if prediction == expected else "✗"
+            status = "OK" if prediction == expected else "FAIL"
             print(f"  {status} {name}: pred={prediction}, expected={expected}, output={center_output:.3f}")
     
     print("\n" + "="*70)

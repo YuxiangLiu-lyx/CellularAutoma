@@ -1,6 +1,6 @@
 """
-Test 2-channel CNN convergence WITHOUT L1 regularization.
-Compare with L1 version to see if L1 is necessary for 2-channel models.
+Test 2-channel CNN convergence WITH L2 regularization.
+Compare with L1 and no-regularization versions to evaluate L2's effect.
 Train 5 runs to test convergence.
 """
 import sys
@@ -30,10 +30,10 @@ def set_seed(seed):
 
 
 def train_one_run(run_id, seed, train_loader, val_loader, criterion, device, 
-                  max_epochs=100, target_accuracy=1.0, save_dir=None,
-                  patience=20):
+                  weight_decay=0.001, max_epochs=100, target_accuracy=1.0, 
+                  save_dir=None, patience=20):
     """
-    Train one 2-channel model run WITHOUT L1.
+    Train one 2-channel model run WITH L2 regularization.
     
     Args:
         run_id: Run identifier
@@ -42,6 +42,7 @@ def train_one_run(run_id, seed, train_loader, val_loader, criterion, device,
         val_loader: Validation data loader
         criterion: Loss function
         device: Computing device
+        weight_decay: L2 regularization strength
         max_epochs: Maximum training epochs
         target_accuracy: Target accuracy to reach
         save_dir: Directory to save model
@@ -63,7 +64,8 @@ def train_one_run(run_id, seed, train_loader, val_loader, criterion, device,
     num_params = count_parameters(model)
     print(f"Parameters: {num_params}")
     
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    # Adam with weight decay (L2 regularization)
+    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=weight_decay)
     
     best_val_acc = 0
     convergence_epoch = -1
@@ -83,7 +85,8 @@ def train_one_run(run_id, seed, train_loader, val_loader, criterion, device,
             optimizer.zero_grad()
             output = model(state_t)
             
-            loss = criterion(output, state_t1)  # NO L1
+            # Only BCE loss (L2 is in optimizer via weight_decay)
+            loss = criterion(output, state_t1)
             
             loss.backward()
             optimizer.step()
@@ -146,7 +149,7 @@ def train_one_run(run_id, seed, train_loader, val_loader, criterion, device,
                     'run_id': run_id,
                     'seed': seed,
                     'hidden_channels': 2,
-                    'lambda_l1': 0.0,  # NO L1
+                    'weight_decay': weight_decay,
                     'convergence_epoch': convergence_epoch,
                     'model_state_dict': model.state_dict(),
                     'val_accuracy': val_acc,
@@ -166,9 +169,12 @@ def train_one_run(run_id, seed, train_loader, val_loader, criterion, device,
     # Analyze channel weights
     conv1_weights = model.conv1.weight.data.cpu().numpy()
     channel_l1_norms = []
+    channel_l2_norms = []
     for i in range(2):
         l1_norm = np.sum(np.abs(conv1_weights[i]))
+        l2_norm = np.sqrt(np.sum(conv1_weights[i]**2))
         channel_l1_norms.append(float(l1_norm))
+        channel_l2_norms.append(float(l2_norm))
     
     return {
         'run_id': run_id,
@@ -177,6 +183,7 @@ def train_one_run(run_id, seed, train_loader, val_loader, criterion, device,
         'convergence_epoch': convergence_epoch,
         'best_val_acc': float(best_val_acc),
         'channel_l1_norms': channel_l1_norms,
+        'channel_l2_norms': channel_l2_norms,
         'epoch_history': epoch_history,
         'stopped_early': epochs_without_improvement >= patience and convergence_epoch == -1
     }
@@ -187,7 +194,7 @@ def main():
     project_root = Path(__file__).parent.parent
     data_dir = project_root / "data" / "processed"
     
-    output_dir = project_root / "experiments" / "2ch_no_l1"
+    output_dir = project_root / "experiments" / "2ch_l2"
     output_dir.mkdir(parents=True, exist_ok=True)
     
     models_dir = output_dir / "models"
@@ -200,13 +207,15 @@ def main():
     else:
         device = torch.device('cpu')
     
+    weight_decay = 0.001
+    
     print("="*70)
-    print("2-Channel CNN Test WITHOUT L1 Regularization")
+    print("2-Channel CNN Test WITH L2 Regularization")
     print("="*70)
     print(f"Device: {device}")
     print(f"Configuration:")
     print(f"  - Architecture: 2-channel CNN")
-    print(f"  - L1 regularization: None")
+    print(f"  - L2 regularization: weight_decay={weight_decay}")
     print(f"  - Number of runs: 5")
     print(f"  - Max epochs per run: 100")
     print(f"  - Early stopping patience: 20 epochs")
@@ -232,7 +241,7 @@ def main():
     num_runs = 5
     
     # Use different seeds
-    base_seed = 5000
+    base_seed = 6000
     seeds = [base_seed + i * 100 for i in range(num_runs)]
     
     print(f"\nStarting {num_runs} training runs...")
@@ -249,6 +258,7 @@ def main():
             val_loader=val_loader,
             criterion=criterion,
             device=device,
+            weight_decay=weight_decay,
             max_epochs=100,
             target_accuracy=1.0,
             save_dir=models_dir,
@@ -292,13 +302,13 @@ def main():
     # Save summary
     summary = {
         'experiment': {
-            'name': '2-Channel CNN Test WITHOUT L1',
+            'name': '2-Channel CNN Test WITH L2',
             'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'total_time_seconds': total_time,
         },
         'configuration': {
             'architecture': '2-channel CNN',
-            'lambda_l1': 0.0,
+            'weight_decay': weight_decay,
             'num_runs': num_runs,
             'max_epochs': 100,
             'early_stopping_patience': 20,
@@ -326,8 +336,8 @@ def main():
     print("\n" + "="*70)
     print("CONCLUSION")
     print("="*70)
-    print(f"WITHOUT L1: {converged_count}/5 converged ({converged_count/5*100:.1f}%)")
-    print(f"Compare with L1 and L2 results to see if regularization helps!")
+    print(f"WITH L2 (weight_decay={weight_decay}): {converged_count}/5 converged ({converged_count/5*100:.1f}%)")
+    print(f"Compare with L1 and no-regularization results!")
     print("="*70)
 
 

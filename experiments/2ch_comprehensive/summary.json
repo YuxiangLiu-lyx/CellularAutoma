@@ -1,0 +1,58 @@
+{
+  "experiment": "Comprehensive 2-Channel CNN Regularization Comparison",
+  "date": "2025-12-03 04:04:55",
+  "total_time_seconds": 107696.230339,
+  "total_time_minutes": 1794.9371723166666,
+  "configuration": {
+    "architecture": "2-channel CNN",
+    "num_runs_per_type": 30,
+    "total_runs": 90,
+    "max_epochs": 100,
+    "early_stopping_patience": 20,
+    "target_accuracy": 1.0,
+    "regularization_configs": {
+      "L1": {
+        "lambda": 0.001
+      },
+      "L2": {
+        "weight_decay": 0.001
+      },
+      "None": {}
+    }
+  },
+  "summary_statistics": {
+    "L1": {
+      "total_runs": 30,
+      "converged_count": 11,
+      "convergence_rate": 0.36666666666666664,
+      "mean_convergence_epoch": 19.363636363636363,
+      "median_convergence_epoch": 18.0,
+      "std_convergence_epoch": 6.004130809439406,
+      "min_convergence_epoch": 9,
+      "max_convergence_epoch": 35,
+      "best_non_converged_accuracy": 0.80568310546875
+    },
+    "L2": {
+      "total_runs": 30,
+      "converged_count": 14,
+      "convergence_rate": 0.4666666666666667,
+      "mean_convergence_epoch": 19.642857142857142,
+      "median_convergence_epoch": 21.0,
+      "std_convergence_epoch": 5.8015655874346646,
+      "min_convergence_epoch": 8,
+      "max_convergence_epoch": 28,
+      "best_non_converged_accuracy": 0.80568310546875
+    },
+    "None": {
+      "total_runs": 30,
+      "converged_count": 5,
+      "convergence_rate": 0.16666666666666666,
+      "mean_convergence_epoch": 17.6,
+      "median_convergence_epoch": 17.0,
+      "std_convergence_epoch": 8.73155198117723,
+      "min_convergence_epoch": 8,
+      "max_convergence_epoch": 28,
+      "best_non_converged_accuracy": 0.88263037109375
+    }
+  }
+}

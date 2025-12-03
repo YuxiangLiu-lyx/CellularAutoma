@@ -140,7 +140,7 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
         
         if val_acc >= target_accuracy and convergence_epoch == -1:
             convergence_epoch = epoch + 1
-            print(f"  ✓ Converged at epoch {convergence_epoch}")
+            print(f"  Converged at epoch {convergence_epoch}")
             
             if save_dir:
                 model_path = save_dir / f"run_{run_id:02d}_seed_{seed}.pth"
@@ -157,7 +157,7 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
             break
     
     if convergence_epoch == -1:
-        print(f"  ✗ Did not converge (best: {best_val_acc:.6f})")
+        print(f"  Did not converge (best: {best_val_acc:.6f})")
     
     return {
         'run_id': run_id,
@@ -332,23 +332,14 @@ def main():
             
             f.write(f"## Analysis\n\n")
             if converged_count == 10:
-                f.write(f"**✓ SUCCESS**: All 10 runs converged to 100% accuracy!\n\n")
-                f.write(f"4 channels are **sufficient** for this task. This shows:\n")
-                f.write(f"- Extremely minimal architecture can still solve Game of Life\n")
-                f.write(f"- Can train 4-channel models directly\n")
-                f.write(f"- Significant parameter reduction: 4ch has ~29 params vs 16ch with 177 params\n")
+                f.write(f"All 10 runs converged to 100% accuracy.\n\n")
+                f.write(f"4 channels are sufficient (~29 params vs 177 for 16-channel).\n")
             elif converged_count >= 7:
-                f.write(f"**Mostly successful**: {converged_count}/10 runs converged.\n\n")
-                f.write(f"4 channels are **likely sufficient** but may need:\n")
-                f.write(f"- Better initialization\n")
-                f.write(f"- Hyperparameter tuning\n")
-                f.write(f"- More training epochs for some cases\n")
+                f.write(f"{converged_count}/10 runs converged.\n\n")
+                f.write(f"4 channels are likely sufficient with tuning.\n")
             else:
-                f.write(f"**Limited success**: Only {converged_count}/10 runs converged.\n\n")
-                f.write(f"4 channels may be **too few** for reliable training. Consider:\n")
-                f.write(f"- Using 5-6 channels instead\n")
-                f.write(f"- Different training strategy\n")
-                f.write(f"- Pruning from larger model may be more reliable\n")
+                f.write(f"Only {converged_count}/10 runs converged.\n\n")
+                f.write(f"4 channels may be insufficient. Consider 5-6 channels.\n")
         else:
             f.write(f"\n**FAILED**: No runs converged to 100% accuracy.\n\n")
             f.write(f"4 channels are **insufficient** for this task.\n")
@@ -371,17 +362,14 @@ def main():
     print("CONCLUSION")
     print("="*70)
     if converged_count == 10:
-        print("✓ 4 channels are SUFFICIENT - all runs converged!")
-        print(f"  Average convergence: {np.mean(convergence_epochs):.1f} epochs")
+        print(f"4 channels sufficient: all runs converged")
+        print(f"Average convergence: {np.mean(convergence_epochs):.1f} epochs")
     elif converged_count >= 7:
-        print(f"⚠ 4 channels are LIKELY SUFFICIENT - {converged_count}/10 converged")
-        print(f"  May need tuning for 100% reliability")
+        print(f"4 channels likely sufficient: {converged_count}/10 converged")
     elif converged_count >= 5:
-        print(f"⚠ 4 channels are MARGINAL - only {converged_count}/10 converged")
-        print(f"  Consider using 5-6 channels instead")
+        print(f"4 channels marginal: {converged_count}/10 converged")
     else:
-        print(f"✗ 4 channels are INSUFFICIENT - only {converged_count}/10 converged")
-        print(f"  Recommend using at least 6 channels")
+        print(f"4 channels insufficient: only {converged_count}/10 converged")
     print("="*70)
 
 

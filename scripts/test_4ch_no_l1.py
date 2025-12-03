@@ -130,7 +130,7 @@ def train_one_run(run_id, seed, train_loader, val_loader, criterion, device,
         
         if val_acc >= target_accuracy and convergence_epoch == -1:
             convergence_epoch = epoch + 1
-            print(f"  ✓ Converged at epoch {convergence_epoch}")
+            print(f"  Converged at epoch {convergence_epoch}")
             
             if save_dir:
                 model_path = save_dir / f"run_{run_id:02d}_seed_{seed}.pth"
@@ -146,7 +146,7 @@ def train_one_run(run_id, seed, train_loader, val_loader, criterion, device,
             break
     
     if convergence_epoch == -1:
-        print(f"  ✗ Did not converge (best: {best_val_acc:.6f})")
+        print(f"  Did not converge (best: {best_val_acc:.6f})")
     
     return {
         'run_id': run_id,
@@ -319,30 +319,17 @@ def main():
             
             f.write(f"## Analysis\n\n")
             if converged_count == 30:
-                f.write(f"**✓ SUCCESS**: All 30 runs converged WITHOUT L1 regularization!\n\n")
-                f.write(f"This proves that:\n")
-                f.write(f"- **L1 regularization is NOT necessary** for 4 channels\n")
-                f.write(f"- The key was **insufficient training epochs** (20 vs 100)\n")
-                f.write(f"- 4-channel CNN has enough capacity for this task\n")
-                f.write(f"- Average convergence: {np.mean(convergence_epochs):.1f} epochs\n")
+                f.write(f"All 30 runs converged without L1 regularization.\n\n")
+                f.write(f"L1 is not necessary for 4 channels with sufficient epochs.\n")
             elif converged_count >= 25:
-                f.write(f"**Mostly successful**: {converged_count}/30 runs converged.\n\n")
-                f.write(f"This suggests:\n")
-                f.write(f"- **L1 may help but is not critical**\n")
-                f.write(f"- Most initializations can reach 100% without L1\n")
-                f.write(f"- Some unlucky initializations may benefit from L1\n")
+                f.write(f"{converged_count}/30 runs converged.\n\n")
+                f.write(f"L1 may help but is not critical.\n")
             elif converged_count >= 15:
-                f.write(f"**Mixed results**: {converged_count}/30 runs converged.\n\n")
-                f.write(f"This suggests:\n")
-                f.write(f"- **L1 regularization does help significantly**\n")
-                f.write(f"- Without L1, success depends heavily on initialization\n")
-                f.write(f"- L1 provides more stable/reliable convergence\n")
+                f.write(f"{converged_count}/30 runs converged.\n\n")
+                f.write(f"L1 regularization helps improve convergence.\n")
             else:
-                f.write(f"**Limited success**: Only {converged_count}/30 runs converged.\n\n")
-                f.write(f"This proves:\n")
-                f.write(f"- **L1 regularization is important** for 4 channels\n")
-                f.write(f"- Without L1, convergence is unreliable\n")
-                f.write(f"- L1 helps the small model learn effectively\n")
+                f.write(f"Only {converged_count}/30 runs converged.\n\n")
+                f.write(f"L1 regularization is beneficial for 4 channels.\n")
         else:
             f.write(f"\n**FAILED**: No runs converged WITHOUT L1.\n\n")
             f.write(f"This proves L1 regularization is **essential** for 4-channel models.\n")
@@ -371,18 +358,14 @@ def main():
     print("CONCLUSION: L1 Regularization Impact")
     print("="*70)
     if converged_count == 30:
-        print("✓ L1 is NOT necessary - all runs converged without it!")
-        print(f"  The issue was just insufficient training epochs (20 vs 100)")
-        print(f"  Average convergence: {np.mean(convergence_epochs):.1f} epochs")
+        print(f"L1 not necessary: all runs converged without it")
+        print(f"Average convergence: {np.mean(convergence_epochs):.1f} epochs")
     elif converged_count >= 25:
-        print(f"⚠ L1 helps but is not critical - {converged_count}/30 converged")
-        print(f"  L1 may provide more stable convergence")
+        print(f"L1 helps but not critical: {converged_count}/30 converged")
     elif converged_count >= 15:
-        print(f"⚠ L1 is beneficial - only {converged_count}/30 converged without it")
-        print(f"  L1 significantly improves convergence reliability")
+        print(f"L1 beneficial: {converged_count}/30 converged without it")
     else:
-        print(f"✗ L1 is important - only {converged_count}/30 converged without it")
-        print(f"  L1 regularization helps 4-channel models learn effectively")
+        print(f"L1 important: only {converged_count}/30 converged without it")
     print("="*70)
 
 

@@ -243,18 +243,18 @@ def main():
         print(f"  Test:  {test_acc*100:.2f}%")
     
     if train_acc >= 1.0 and val_acc >= 1.0:
-        print(f"\n✓✓✓ PERFECT ACCURACY on both train and validation sets!")
+        print(f"\nPerfect accuracy on both train and validation sets")
         print(f"    2 channels are SUFFICIENT to solve Game of Life!")
         print(f"    This is the theoretical minimum architecture!")
     elif test_acc is not None:
         if test_acc >= 1.0:
-            print(f"\n✓✓✓ PERFECT ACCURACY on test set!")
+            print(f"\nPerfect accuracy on test set")
             print(f"    2 channels are SUFFICIENT to solve Game of Life!")
         elif test_acc >= 0.99:
-            print(f"\n✓✓ Near-perfect accuracy!")
+            print(f"\nNear-perfect accuracy")
             print(f"   2 channels achieve {test_acc*100:.2f}% on unseen data")
         else:
-            print(f"\n⚠ Some errors on test set ({(1-test_acc)*100:.2f}% error rate)")
+            print(f"\nSome errors on test set ({(1-test_acc)*100:.2f}% error rate)")
     
     print("\n" + "="*70)
 

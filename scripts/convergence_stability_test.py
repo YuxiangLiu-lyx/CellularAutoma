@@ -136,7 +136,7 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
         
         if val_acc >= target_accuracy and convergence_epoch == -1:
             convergence_epoch = epoch + 1
-            print(f"  ✓ Converged at epoch {convergence_epoch}")
+            print(f"  Converged at epoch {convergence_epoch}")
             
             if save_dir:
                 model_path = save_dir / f"run_{run_id:02d}_seed_{seed}.pth"
@@ -153,7 +153,7 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
             break
     
     if convergence_epoch == -1:
-        print(f"  ✗ Did not converge (best: {best_val_acc:.6f})")
+        print(f"  Did not converge (best: {best_val_acc:.6f})")
     
     return {
         'run_id': run_id,

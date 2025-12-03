@@ -101,10 +101,10 @@ def greedy_channel_removal(original_model, test_data, device, target_accuracy=0.
         if best_accuracy >= target_accuracy:
             removed_channels.append(best_channel_to_remove)
             remaining_channels.remove(best_channel_to_remove)
-            print(f"  ✓ Safe to remove (accuracy maintained)")
+            print(f"  Safe to remove (accuracy maintained)")
             print(f"  Active channels: {len(remaining_channels)}/{num_channels}")
         else:
-            print(f"  ✗ Cannot remove (accuracy drops below {target_accuracy:.1%})")
+            print(f"  Cannot remove (accuracy drops below {target_accuracy:.1%})")
             print(f"  Stopping pruning")
             break
     
@@ -166,7 +166,7 @@ def exhaustive_search_small_sets(original_model, test_data, device, max_channels
         print(f"  Accuracy: {best_accuracy:.6f} ({best_accuracy*100:.2f}%)")
         
         if best_accuracy >= 0.999:
-            print(f"\n✓ Found minimal channel set with {n} channels!")
+            print(f"\nFound minimal channel set with {n} channels")
             return best_combination, best_accuracy
     
     return None, 0

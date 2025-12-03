@@ -148,7 +148,7 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
         
         if val_acc >= target_accuracy and convergence_epoch == -1:
             convergence_epoch = epoch + 1
-            print(f"  ✓ Converged at epoch {convergence_epoch}")
+            print(f"  Converged at epoch {convergence_epoch}")
             
             if save_dir:
                 model_path = save_dir / f"run_{run_id:02d}_seed_{seed}.pth"
@@ -165,7 +165,7 @@ def train_one_run(run_id, seed, lambda_l1, train_loader, val_loader, criterion, 
             break
     
     if convergence_epoch == -1:
-        print(f"  ✗ Did not converge (best: {best_val_acc:.6f})")
+        print(f"  Did not converge (best: {best_val_acc:.6f})")
     
     # Analyze channel weights
     conv1_weights = model.conv1.weight.data.cpu().numpy()
@@ -385,28 +385,17 @@ def main():
             
             f.write(f"## Analysis\n\n")
             if converged_count == 10:
-                f.write(f"**✓ REMARKABLE SUCCESS**: All 10 runs converged to 100% accuracy!\n\n")
-                f.write(f"3 channels are **sufficient** for Game of Life! This is amazing:\n")
-                f.write(f"- Absolute minimal viable architecture\n")
-                f.write(f"- Only ~22 parameters (vs 16ch with 177 params)\n")
-                f.write(f"- **92% parameter reduction** while maintaining perfect accuracy\n")
-                f.write(f"- L1 regularization effectively guides minimal architecture\n")
+                f.write(f"All 10 runs converged to 100% accuracy.\n\n")
+                f.write(f"3 channels are sufficient (~22 parameters, 92% reduction from 16-channel).\n")
             elif converged_count >= 7:
-                f.write(f"**Promising results**: {converged_count}/10 runs converged.\n\n")
-                f.write(f"3 channels are **likely sufficient** but may benefit from:\n")
-                f.write(f"- Better initialization strategies\n")
-                f.write(f"- Fine-tuned L1 regularization strength\n")
-                f.write(f"- More training epochs or learning rate schedules\n")
+                f.write(f"{converged_count}/10 runs converged.\n\n")
+                f.write(f"3 channels are likely sufficient with tuning.\n")
             elif converged_count >= 4:
-                f.write(f"**Partial success**: {converged_count}/10 runs converged.\n\n")
-                f.write(f"3 channels are **marginal**. Consider:\n")
-                f.write(f"- 4 channels for more reliable convergence\n")
-                f.write(f"- Different regularization approach\n")
-                f.write(f"- Pruning from larger model may be more stable\n")
+                f.write(f"{converged_count}/10 runs converged.\n\n")
+                f.write(f"3 channels are marginal. Consider 4 channels.\n")
             else:
-                f.write(f"**Limited success**: Only {converged_count}/10 runs converged.\n\n")
-                f.write(f"3 channels appear **insufficient** for reliable training.\n")
-                f.write(f"Recommendation: Use at least 4-5 channels for stable results.\n")
+                f.write(f"Only {converged_count}/10 runs converged.\n\n")
+                f.write(f"3 channels may be insufficient. Consider 4+ channels.\n")
         else:
             f.write(f"\n**FAILED**: No runs converged to 100% accuracy.\n\n")
             f.write(f"3 channels are **insufficient** for this task with current training setup.\n")
@@ -436,19 +425,14 @@ def main():
     print("CONCLUSION")
     print("="*70)
     if converged_count == 10:
-        print("✓✓✓ 3 CHANNELS ARE SUFFICIENT - all runs converged!")
-        print(f"    This is the absolute minimum architecture!")
-        print(f"    Average convergence: {np.mean(convergence_epochs):.1f} epochs")
-        print(f"    Parameter reduction: ~92% vs standard 16-channel model")
+        print(f"3 channels sufficient: all runs converged")
+        print(f"Average convergence: {np.mean(convergence_epochs):.1f} epochs")
     elif converged_count >= 7:
-        print(f"✓ 3 channels are LIKELY SUFFICIENT - {converged_count}/10 converged")
-        print(f"  With tuning, 3 channels could be reliable")
+        print(f"3 channels likely sufficient: {converged_count}/10 converged")
     elif converged_count >= 4:
-        print(f"⚠ 3 channels are MARGINAL - {converged_count}/10 converged")
-        print(f"  Consider using 4 channels for better reliability")
+        print(f"3 channels marginal: {converged_count}/10 converged")
     else:
-        print(f"✗ 3 channels are INSUFFICIENT - only {converged_count}/10 converged")
-        print(f"  Recommend at least 4-5 channels for reliable training")
+        print(f"3 channels insufficient: only {converged_count}/10 converged")
     print("="*70)
 
 

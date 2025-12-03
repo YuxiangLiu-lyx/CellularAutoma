@@ -114,12 +114,12 @@ def greedy_channel_removal(original_model, test_data, device, target_accuracy=0.
             })
             
             if verbose:
-                print(f"    ✓ Removed channel {best_channel_to_remove}, "
+                print(f"    Removed channel {best_channel_to_remove}, "
                       f"active: {len(remaining_channels)}/{num_channels}, "
                       f"acc: {best_accuracy:.6f}")
         else:
             if verbose:
-                print(f"    ✗ Cannot remove more channels (acc would drop to {best_accuracy:.6f})")
+                print(f"    Cannot remove more channels (acc would drop to {best_accuracy:.6f})")
             break
     
     return {

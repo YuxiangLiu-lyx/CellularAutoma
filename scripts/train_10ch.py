@@ -170,12 +170,12 @@ def main():
     print(f"Model saved to: {save_path}")
     
     if best_val_acc >= target_accuracy:
-        print(f"\n✓ SUCCESS: 10 channels are sufficient!")
+        print(f"\n10 channels are sufficient!")
         print(f"  - Achieved {best_val_acc*100:.2f}% accuracy")
         print(f"  - Parameters: {count_parameters(model):,} (vs 177 for 16-ch)")
         print(f"  - No pruning needed - can train 10-ch model directly")
     else:
-        print(f"\n✗ INSUFFICIENT: 10 channels may not be enough")
+        print(f"\n10 channels may not be enough")
         print(f"  - Best achieved: {best_val_acc*100:.2f}%")
         print(f"  - Did not reach 100% in {max_epochs} epochs")
         print(f"  - May need more channels or different architecture")
@@ -254,12 +254,12 @@ def main():
         
         f.write(f"## Results\n\n")
         if best_val_acc >= target_accuracy:
-            f.write(f"✓ **SUCCESS**: 10 channels are sufficient!\n\n")
+            f.write(f"10 channels are sufficient.\n\n")
             f.write(f"- Achieved {best_val_acc*100:.2f}% accuracy\n")
             f.write(f"- Validates L1 pruning findings\n")
             f.write(f"- Can train 10-channel model directly without pruning\n")
         else:
-            f.write(f"⚠ **PARTIAL SUCCESS**: Reached {best_val_acc*100:.2f}% accuracy\n\n")
+            f.write(f"Partial success: Reached {best_val_acc*100:.2f}% accuracy\n\n")
             f.write(f"- Did not reach 100% in {max_epochs} epochs\n")
             f.write(f"- May need more training or different approach\n")
         
