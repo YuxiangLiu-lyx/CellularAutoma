@@ -1,6 +1,4 @@
-"""
-Predefined Game of Life patterns
-"""
+"""Predefined Game of Life patterns."""
 import numpy as np
 
 
@@ -122,31 +120,15 @@ PATTERN_CATEGORIES = {
 
 
 def get_pattern(name: str) -> np.ndarray:
-    """
-    Get a pattern by name.
-    
-    Args:
-        name: Pattern name (e.g., 'glider', 'blinker')
-        
-    Returns:
-        Pattern array
-        
-    Raises:
-        ValueError: If pattern name not found
-    """
+    """Return a copy of the requested pattern array by name."""
     for category in PATTERN_CATEGORIES.values():
         if name in category:
             return category[name].copy()
     
-    raise ValueError(f"Pattern '{name}' not found. Available patterns: "
-                     f"{[p for cat in PATTERN_CATEGORIES.values() for p in cat.keys()]}")
+    available = [pattern for cat in PATTERN_CATEGORIES.values() for pattern in cat.keys()]
+    raise ValueError(f"Pattern '{name}' not found. Available patterns: {available}")
 
 
 def get_all_patterns():
-    """
-    Get all available patterns organized by category.
-    
-    Returns:
-        Dictionary of categories and their patterns
-    """
+    """Return all available patterns organized by category."""
     return PATTERN_CATEGORIES

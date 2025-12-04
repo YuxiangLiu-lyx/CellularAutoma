@@ -11,30 +11,31 @@ Neural network models for learning Conway's Game of Life rules using convolution
 | 16-ch convergence stability | `experiments/convergence_stability/` | 16ch, L1=0.001, 30 runs | 100% convergence, avg 10.8 epochs |
 | 10-ch direct training | `experiments/direct_training/` | 10ch, no pruning | 100% accuracy, 24 epochs |
 | 4-ch convergence | `experiments/4ch_convergence/` | 4ch, L1=0.001, 10 runs | 100% convergence, avg 16.8 epochs |
-| 2-ch convergence (L1) | `experiments/2ch_convergence/` | 2ch, L1=0.001, 5 runs | 80% convergence, avg 21 epochs |
-| 2-ch comprehensive | `experiments/2ch_comprehensive/` | 2ch, L1/L2/None, 90 runs | L2 best (46.7%), L1 (36.7%), None (16.7%) |
-| Grokking | `experiments/grokking/` | Bilinear, P=97 | No grokking with L1/L2 |
-| Logic gates | `experiments/logic_gates/` | 32-2-1 MLP | Did not converge, best 84.8% |
+| 2-ch convergence (L1) | `experiments/2ch_convergence/` | 2ch, L1=0.001, 5 runs | 80% convergence, avg 21 epochs; 1 model 100% on all 512 patterns |
+| 2-ch comprehensive | `experiments/2ch_comprehensive/` | 2ch, L1/L2/None, 90 runs | L2 best (43.3%), L1 (36.7%), None (16.7%) |
+| Maze 2-ch comprehensive | `experiments/maze_comprehensive/` | Maze rule, 2ch, L1/L2/None, 300 runs | 25–39% convergence depending on regularization |
+| Maze transfer from GoL | `experiments/maze_transfer/` | 2ch, fine-tune from 36 converged GoL models | 36/36 convergence, avg 3.1 epochs |
 
 ### Key Findings
 
-1. **Minimum Architecture**: 2 channels can solve Game of Life (~15 parameters), but 4 channels provide more reliable convergence
+1. **Minimum Architecture**: 2 channels can solve Game of Life (~23 parameters) – a 2‑channel CNN reached 100% accuracy on all 512 possible 3×3 patterns, but 4 channels provide more reliable convergence.
 
-2. **Regularization Effect**: 
-   - L1 promotes sparsity, useful for pruning
-   - L2 slightly better for training minimal architectures
-   - Both significantly better than no regularization
+2. **Lottery Ticket & Regularization Effect**: For 2‑channel models on GoL (90 runs), convergence rates are 5/30 (16.7%) with no regularization, 11/30 (36.7%) with L1, and 13/30 (43.3%) with L2, showing that good initializations are rare without regularization and that L2 works best when we want channels to behave uniformly (neighbors play symmetric roles).
 
-3. **Parameter Efficiency**:
+3. **Rule Continuity vs Capacity**: GoL (B3/S23) and Maze (B3/S12345) both have survival on continuous neighbor intervals, and 2‑channel CNNs can learn them (many runs reach 100% for both rules). In contrast, the HighLife rule (B36/S23) has a disjoint birth set {3, 6}; theoretically a 2‑channel model that operates on “center + neighbor count” cannot carve out such a disconnected region cleanly. In our HighLife 2‑channel runs (30 attempts, no converged checkpoints saved in `experiments/highlife_comprehensive/`), the observed convergence rate was effectively 0/30.
+
+4. **Transfer Learning Across Rules**: When we fine‑tune Maze from 36 converged 2‑channel GoL models (`experiments/maze_transfer/`), all 36 runs converge (100% success) with a mean convergence epoch of ≈3.1. This indicates that the model has already learned the shared spatial structure (counting neighbors) on GoL and can adapt to the closely related Maze rule almost immediately.
+
+5. **Parameter Efficiency**:
 
 | Architecture | Parameters | Convergence Rate |
 |-------------|------------|------------------|
 | 16-channel  | 177        | 100%             |
 | 10-channel  | 111        | 100%             |
 | 4-channel   | 45         | 100%             |
-| 2-channel   | 21         | 17-47%           |
+| 2-channel   | 23         | 17-80%           |
 
-4. **Training Stability**: Standard deviation of convergence epochs correlates with channel count - more channels = more stable
+6. **Training Stability**: Standard deviation of convergence epochs correlates with channel count - more channels = more stable
 
 ## Project Structure
 
@@ -73,15 +74,20 @@ Contains results from various training runs and ablation studies.
 
 - `6ch_convergence/` - Six-channel experiments
   
+- `maze_comprehensive/` - 2-channel Maze rule training (L1/L2/None)
+  - `summary.json` - Aggregated statistics across runs
+  - `models/` - Saved checkpoints
+  
+- `maze_transfer/` - Transfer learning from converged GoL 2-channel models to Maze
+  - `transfer_results.json` - Fine-tuning statistics
+  - `models/` - Fine-tuned checkpoints
+  
 - `convergence_stability/` - Multi-run stability tests
   - `pruning_limits.json` - Analysis of minimum viable channels
   - `exhaustive_test/` - Pattern-level validation
   
 - `direct_training/` - Direct training on minimal architectures
   - `training_history.json` - Loss and accuracy curves
-
-- `logic_gates/` - Random logic function experiments
-  - `results.json` - Feature selection and accuracy metrics
 
 ### models/
 
@@ -174,9 +180,6 @@ Training scripts are in `scripts/`. Key examples:
 # Two-channel convergence test
 python3 scripts/test_2ch_convergence.py
 
-# Logic gates experiment
-python3 scripts/logic_gates_experiment.py
-
 # Exhaustive pattern validation
 python3 scripts/test_all_patterns.py --model path/to/model.pth
 
@@ -192,4 +195,3 @@ HDF5 datasets contain:
 - `states_t1` - Next state (N, 1, H, W)
 
 Binary arrays with 0 (dead) and 1 (alive).
-

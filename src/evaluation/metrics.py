@@ -1,38 +1,15 @@
-"""
-Evaluation metrics for Game of Life prediction
-"""
+"""Evaluation metrics for Game of Life prediction."""
 import numpy as np
 from typing import Callable, Optional
 
 
 def pixel_accuracy(pred: np.ndarray, true: np.ndarray) -> float:
-    """
-    Calculate pixel-wise accuracy.
-    
-    Args:
-        pred: Predicted states (N, H, W) or (H, W)
-        true: True states (N, H, W) or (H, W)
-        
-    Returns:
-        Accuracy as float between 0 and 1
-    """
+    """Return pixel-wise accuracy."""
     return np.mean(pred == true)
 
 
 def alive_cell_accuracy(pred: np.ndarray, true: np.ndarray) -> float:
-    """
-    Calculate accuracy only on alive cells (where true == 1).
-    
-    This metric is crucial for sparse patterns like gliders.
-    If model predicts all dead, pixel_accuracy can be high but this will be 0.
-    
-    Args:
-        pred: Predicted states (N, H, W) or (H, W)
-        true: True states (N, H, W) or (H, W)
-        
-    Returns:
-        Accuracy on alive cells, or 1.0 if no alive cells
-    """
+    """Return accuracy restricted to cells that are alive in the target."""
     alive_mask = (true == 1)
     num_alive = np.sum(alive_mask)
     
@@ -44,31 +21,15 @@ def alive_cell_accuracy(pred: np.ndarray, true: np.ndarray) -> float:
 
 
 def pattern_preservation_score(pred: np.ndarray, true: np.ndarray) -> float:
-    """
-    Calculate how well the pattern is preserved.
-    
-    Combines:
-    - Alive cell recall: did we keep the alive cells?
-    - Dead cell precision: did we avoid false alives?
-    
-    Args:
-        pred: Predicted states
-        true: True states
-        
-    Returns:
-        Score between 0 and 1
-    """
-    # Recall on alive cells
+    """Return an F1-style score balancing alive recall and dead precision."""
     alive_mask = (true == 1)
     num_true_alive = np.sum(alive_mask)
     
     if num_true_alive == 0:
-        # No alive cells, check if prediction is also empty
         return 1.0 if np.sum(pred) == 0 else 0.0
     
     recall = np.sum((pred == 1) & alive_mask) / num_true_alive
     
-    # Precision on predicted alive cells
     num_pred_alive = np.sum(pred == 1)
     if num_pred_alive == 0:
         precision = 0.0
@@ -87,18 +48,7 @@ def multi_step_accuracy(predictor: Callable,
                        initial_state: np.ndarray,
                        true_trajectory: np.ndarray,
                        metric='pixel') -> np.ndarray:
-    """
-    Evaluate prediction accuracy over multiple steps.
-    
-    Args:
-        predictor: Function that takes state and returns next state
-        initial_state: Initial state (H, W)
-        true_trajectory: True trajectory (T, H, W)
-        metric: 'pixel', 'alive', or 'pattern' for different metrics
-        
-    Returns:
-        Array of accuracies for each time step
-    """
+    """Evaluate trajectory accuracy over multiple steps using a chosen metric."""
     num_steps = len(true_trajectory) - 1
     accuracies = np.zeros(num_steps)
     
@@ -125,21 +75,7 @@ def find_collapse_step(predictor: Callable,
                        true_trajectory: np.ndarray,
                        threshold: float = 0.95,
                        metric: str = 'pattern') -> int:
-    """
-    Find the step where prediction collapses.
-    
-    Uses pattern preservation score by default to avoid issues with sparse patterns.
-    
-    Args:
-        predictor: Function that takes state and returns next state
-        initial_state: Initial state (H, W)
-        true_trajectory: True trajectory (T, H, W)
-        threshold: Accuracy threshold
-        metric: 'pixel', 'alive', or 'pattern' (recommended)
-        
-    Returns:
-        Step number where accuracy first drops below threshold, or -1 if never
-    """
+    """Return the first timestep where accuracy drops below threshold, or -1."""
     accuracies = multi_step_accuracy(predictor, initial_state, true_trajectory, metric=metric)
     
     collapse_indices = np.where(accuracies < threshold)[0]
@@ -150,30 +86,12 @@ def find_collapse_step(predictor: Callable,
 
 
 def hamming_distance(pred: np.ndarray, true: np.ndarray) -> float:
-    """
-    Calculate normalized Hamming distance (1 - accuracy).
-    
-    Args:
-        pred: Predicted states
-        true: True states
-        
-    Returns:
-        Hamming distance as float between 0 and 1
-    """
+    """Return normalized Hamming distance (1 - accuracy)."""
     return 1.0 - pixel_accuracy(pred, true)
 
 
 def confusion_matrix(pred: np.ndarray, true: np.ndarray) -> dict:
-    """
-    Calculate confusion matrix for binary prediction.
-    
-    Args:
-        pred: Predicted states
-        true: True states
-        
-    Returns:
-        Dictionary with TP, TN, FP, FN counts
-    """
+    """Return confusion matrix counts and derived precision/recall."""
     pred_flat = pred.flatten()
     true_flat = true.flatten()
     
@@ -195,17 +113,7 @@ def confusion_matrix(pred: np.ndarray, true: np.ndarray) -> dict:
 def evaluate_on_dataset(predictor: Callable,
                        states_t: np.ndarray,
                        states_t1: np.ndarray) -> dict:
-    """
-    Evaluate predictor on entire dataset.
-    
-    Args:
-        predictor: Function that takes state and returns next state
-        states_t: Current states (N, H, W)
-        states_t1: True next states (N, H, W)
-        
-    Returns:
-        Dictionary of evaluation metrics
-    """
+    """Evaluate a predictor on a dataset and return summary metrics."""
     num_samples = len(states_t)
     predictions = np.zeros_like(states_t1)
     
@@ -220,4 +128,3 @@ def evaluate_on_dataset(predictor: Callable,
         'hamming_distance': 1.0 - accuracy,
         **cm
     }
-

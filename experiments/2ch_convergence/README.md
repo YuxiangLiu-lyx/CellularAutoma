@@ -9,8 +9,8 @@ Generated: 2025-12-01 17:18:31
 - **Configuration**: lambda_l1 = 0.001, early stopping patience = 20
 - **Number of runs**: 5
 - **Seeds**: 300 to 700
-- **Parameters per model**: ~15 (2 channels × 3×3 kernel + biases)
-- **Parameter reduction**: ~91.5% vs standard 16-channel (177 params)
+- **Parameters per model**: 23 (1×2×3×3+2=20, 2×1×1×1+1=3)
+- **Parameter reduction**: ~87.0% vs standard 16-channel (177 params)
 
 ## Results
 
@@ -62,7 +62,7 @@ Architecture: **Single channel → Multi-channel (2) → Single channel**
 | Standard     | 16       | ~177       | 1×16×9+16=160| 16×1×1+1=17  | 100% (baseline)  |
 | Pruned       | 4        | ~29        | 1×4×9+4=40   | 4×1×1+1=5    | ? (see 4ch)      |
 | Minimal      | 3        | ~22        | 1×3×9+3=30   | 3×1×1+1=4    | ? (see 3ch)      |
-| **This test**| **2**    | **~15**    | **1×2×9+2=20**| **2×1×1+1=3** | **40%** |
+| **This test**| **2**    | **23**     | **1×2×9+2=20**| **2×1×1+1=3** | **80%** |
 
 ## Files
 

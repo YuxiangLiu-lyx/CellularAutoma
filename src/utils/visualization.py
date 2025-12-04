@@ -1,6 +1,4 @@
-"""
-Visualization tools for Game of Life
-"""
+"""Visualization helpers for Game of Life."""
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter
@@ -8,21 +6,12 @@ from pathlib import Path
 from typing import Optional
 
 
-def visualize_state(state: np.ndarray, 
+def visualize_state(state: np.ndarray,
                    title: str = "Game of Life",
                    save_path: Optional[str] = None,
                    figsize: tuple = (8, 8),
                    show_grid: bool = True) -> None:
-    """
-    Visualize a single Game of Life state.
-    
-    Args:
-        state: State array (H x W)
-        title: Plot title
-        save_path: Path to save figure, None for display only
-        figsize: Figure size
-        show_grid: Whether to show grid lines
-    """
+    """Render a single Game of Life state."""
     fig, ax = plt.subplots(figsize=figsize)
     
     ax.imshow(state, cmap='binary', interpolation='nearest')
@@ -54,17 +43,7 @@ def visualize_trajectory(trajectory: np.ndarray,
                         figsize: tuple = (16, 4),
                         num_frames_to_show: int = 8,
                         show_grid: bool = True) -> None:
-    """
-    Visualize multiple frames from a trajectory.
-    
-    Args:
-        trajectory: Trajectory array (T, H, W)
-        pattern_name: Pattern name for title
-        save_path: Path to save figure
-        figsize: Figure size
-        num_frames_to_show: Number of frames to display
-        show_grid: Whether to show grid lines
-    """
+    """Plot selected frames from a trajectory."""
     num_steps = len(trajectory)
     indices = np.linspace(0, num_steps - 1, num_frames_to_show, dtype=int)
     
@@ -101,17 +80,7 @@ def create_animation(trajectory: np.ndarray,
                     fps: int = 10,
                     figsize: tuple = (8, 8),
                     show_grid: bool = True) -> None:
-    """
-    Create animated GIF from trajectory.
-    
-    Args:
-        trajectory: Trajectory array (T, H, W)
-        pattern_name: Pattern name for title
-        save_path: Path to save GIF file
-        fps: Frames per second
-        figsize: Figure size
-        show_grid: Whether to show grid lines
-    """
+    """Create an animation from a trajectory."""
     fig, ax = plt.subplots(figsize=figsize)
     
     im = ax.imshow(trajectory[0], cmap='binary', interpolation='nearest', animated=True)
@@ -148,15 +117,7 @@ def visualize_pattern_grid(patterns_dict: dict,
                           save_path: Optional[str] = None,
                           figsize: tuple = (15, 10),
                           show_grid: bool = True) -> None:
-    """
-    Visualize multiple patterns in a grid.
-    
-    Args:
-        patterns_dict: Dictionary of {name: pattern_array}
-        save_path: Path to save figure
-        figsize: Figure size
-        show_grid: Whether to show grid lines
-    """
+    """Visualize multiple patterns in a grid."""
     num_patterns = len(patterns_dict)
     ncols = min(4, num_patterns)
     nrows = (num_patterns + ncols - 1) // ncols

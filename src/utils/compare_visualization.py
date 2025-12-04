@@ -1,6 +1,4 @@
-"""
-Visualize model predictions vs ground truth
-"""
+"""Visualize model predictions versus ground truth."""
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -12,16 +10,7 @@ def visualize_prediction_comparison(true_trajectory: np.ndarray,
                                    pattern_name: str = "Pattern",
                                    save_path: Optional[str] = None,
                                    num_steps_to_show: int = 10):
-    """
-    Compare predicted trajectory with ground truth side by side.
-    
-    Args:
-        true_trajectory: Ground truth (T, H, W)
-        pred_trajectory: Predicted trajectory (T, H, W)
-        pattern_name: Name for title
-        save_path: Path to save figure
-        num_steps_to_show: Number of timesteps to visualize
-    """
+    """Plot predicted and true trajectories side by side."""
     num_steps = min(num_steps_to_show, len(true_trajectory))
     indices = np.linspace(0, len(true_trajectory) - 1, num_steps, dtype=int)
     
@@ -60,15 +49,7 @@ def visualize_difference_map(true_state: np.ndarray,
                             pred_state: np.ndarray,
                             title: str = "Difference",
                             save_path: Optional[str] = None):
-    """
-    Visualize where predictions differ from ground truth.
-    
-    Args:
-        true_state: Ground truth state (H, W)
-        pred_state: Predicted state (H, W)
-        title: Plot title
-        save_path: Path to save
-    """
+    """Highlight differences between predicted and true states."""
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
     
     # True
@@ -113,14 +94,5 @@ def visualize_difference_map(true_state: np.ndarray,
 
 
 def count_alive_cells(trajectory: np.ndarray) -> np.ndarray:
-    """
-    Count number of alive cells at each timestep.
-    
-    Args:
-        trajectory: Trajectory array (T, H, W)
-        
-    Returns:
-        Array of alive cell counts (T,)
-    """
+    """Count alive cells at each timestep."""
     return np.sum(trajectory, axis=(1, 2))
-

@@ -1,6 +1,4 @@
-"""
-Data loading utilities for Game of Life datasets
-"""
+"""Data loading utilities for Game of Life datasets."""
 import h5py
 import torch
 from torch.utils.data import Dataset, DataLoader
@@ -8,23 +6,12 @@ import numpy as np
 
 
 class GameOfLifeDataset(Dataset):
-    """
-    PyTorch Dataset for Game of Life prediction.
-    
-    Loads data from HDF5 file containing state_t and state_t+1 pairs.
-    """
-    
+    """PyTorch Dataset backed by HDF5 state_t and state_t+1 pairs."""
+
     def __init__(self, h5_path, transform=None):
-        """
-        Initialize dataset.
-        
-        Args:
-            h5_path: Path to HDF5 file
-            transform: Optional transform to apply
-        """
+        """Initialize dataset and record length."""
         self.h5_path = h5_path
         self.transform = transform
-        
         with h5py.File(h5_path, 'r') as f:
             self.length = len(f['states_t'])
     
@@ -32,15 +19,7 @@ class GameOfLifeDataset(Dataset):
         return self.length
     
     def __getitem__(self, idx):
-        """
-        Get a single training sample.
-        
-        Args:
-            idx: Sample index
-            
-        Returns:
-            Tuple of (state_t, state_t1) as tensors
-        """
+        """Return a single (state_t, state_t1) pair as tensors."""
         with h5py.File(self.h5_path, 'r') as f:
             state_t = f['states_t'][idx].astype(np.float32)
             state_t1 = f['states_t1'][idx].astype(np.float32)
@@ -57,18 +36,7 @@ class GameOfLifeDataset(Dataset):
 
 
 def create_dataloader(h5_path, batch_size=32, shuffle=True, num_workers=0):
-    """
-    Create DataLoader for training or evaluation.
-    
-    Args:
-        h5_path: Path to HDF5 file
-        batch_size: Batch size
-        shuffle: Whether to shuffle data
-        num_workers: Number of worker processes
-        
-    Returns:
-        DataLoader object
-    """
+    """Build a DataLoader for training or evaluation."""
     dataset = GameOfLifeDataset(h5_path)
     
     pin_memory = torch.cuda.is_available()
@@ -115,4 +83,3 @@ if __name__ == "__main__":
     
     print("\n" + "=" * 60)
     print("Data loader test passed!")
-

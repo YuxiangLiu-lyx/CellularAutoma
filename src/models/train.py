@@ -1,6 +1,4 @@
-"""
-Training script for Game of Life CNN
-"""
+"""Training entry points for Game of Life CNNs."""
 import sys
 from pathlib import Path
 import torch
@@ -16,19 +14,7 @@ from src.utils.data_loader import create_dataloader
 
 
 def train_epoch(model, loader, criterion, optimizer, device):
-    """
-    Train for one epoch.
-    
-    Args:
-        model: CNN model
-        loader: DataLoader
-        criterion: Loss function
-        optimizer: Optimizer
-        device: Device to train on
-        
-    Returns:
-        Average loss for epoch
-    """
+    """Run one training epoch and return average loss."""
     model.train()
     total_loss = 0
     num_batches = 0
@@ -52,18 +38,7 @@ def train_epoch(model, loader, criterion, optimizer, device):
 
 
 def evaluate(model, loader, criterion, device):
-    """
-    Evaluate model on validation set.
-    
-    Args:
-        model: CNN model
-        loader: DataLoader
-        criterion: Loss function
-        device: Device
-        
-    Returns:
-        Dictionary with loss and accuracy
-    """
+    """Evaluate the model and return loss and pixel accuracy."""
     model.eval()
     total_loss = 0
     total_correct = 0
@@ -94,19 +69,7 @@ def evaluate(model, loader, criterion, device):
 def train_model(model_type='simple', hidden_channels=16, num_layers=2,
                 num_epochs=20, batch_size=32, learning_rate=0.001,
                 save_path='experiments/cnn/model.pt', data_dir='data/processed'):
-    """
-    Train CNN model on Game of Life data.
-    
-    Args:
-        model_type: 'simple' or 'deep'
-        hidden_channels: Number of hidden channels
-        num_layers: Number of layers (for deep model)
-        num_epochs: Number of training epochs
-        batch_size: Batch size
-        learning_rate: Learning rate
-        save_path: Path to save trained model
-        data_dir: Directory containing train.h5 and val.h5
-    """
+    """Train a CNN on Game of Life data and save the best checkpoint."""
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f"Using device: {device}")
     
@@ -212,4 +175,3 @@ if __name__ == "__main__":
         save_path=args.save,
         data_dir=args.data_dir
     )
-

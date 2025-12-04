@@ -381,8 +381,8 @@ def main():
         f.write(f"- **Configuration**: lambda_l1 = 0.001, early stopping patience = 20\n")
         f.write(f"- **Number of runs**: 5\n")
         f.write(f"- **Seeds**: {seeds[0]} to {seeds[-1]}\n")
-        f.write(f"- **Parameters per model**: ~15 (2 channels × 3×3 kernel + biases)\n")
-        f.write(f"- **Parameter reduction**: ~91.5% vs standard 16-channel (177 params)\n\n")
+        f.write(f"- **Parameters per model**: 23 (1×2×3×3+2=20, 2×1×1×1+1=3)\n")
+        f.write(f"- **Parameter reduction**: ~87.0% vs standard 16-channel (177 params)\n\n")
         
         f.write(f"## Results\n\n")
         f.write(f"- **Convergence rate**: {converged_count}/5 ({converged_count/5*100:.1f}%)\n")
@@ -408,8 +408,8 @@ def main():
             if converged_count == 5:
                 f.write(f"All 5 runs converged.\n\n")
                 f.write(f"2 channels are sufficient for Game of Life:\n")
-                f.write(f"- Minimal architecture achieved (~15 parameters)\n")
-                f.write(f"- 91.5% parameter reduction from 16-channel baseline\n\n")
+                f.write(f"- Minimal architecture achieved (23 parameters)\n")
+                f.write(f"- ~87.0% parameter reduction from 16-channel baseline\n\n")
             elif converged_count >= 3:
                 f.write(f"{converged_count}/5 runs converged.\n\n")
                 f.write(f"2 channels are nearly sufficient but sensitive to initialization.\n")
@@ -446,7 +446,7 @@ def main():
         f.write(f"| Standard     | 16       | ~177       | 1×16×9+16=160| 16×1×1+1=17  | 100% (baseline)  |\n")
         f.write(f"| Pruned       | 4        | ~29        | 1×4×9+4=40   | 4×1×1+1=5    | ? (see 4ch)      |\n")
         f.write(f"| Minimal      | 3        | ~22        | 1×3×9+3=30   | 3×1×1+1=4    | ? (see 3ch)      |\n")
-        f.write(f"| **This test**| **2**    | **~15**    | **1×2×9+2=20**| **2×1×1+1=3** | **{converged_count/10*100:.0f}%** |\n\n")
+        f.write(f"| **This test**| **2**    | **23**     | **1×2×9+2=20**| **2×1×1+1=3** | **{converged_count/num_runs*100:.0f}%** |\n\n")
         
         f.write(f"## Files\n\n")
         f.write(f"- `summary.json` - Complete experimental data\n")
@@ -475,7 +475,7 @@ def main():
     print("CONCLUSION")
     print("="*70)
     if converged_count == 5:
-        print(f"2 channels sufficient: all runs converged (~15 params)")
+        print(f"2 channels sufficient: all runs converged (23 params)")
         print(f"Average convergence: {np.mean(convergence_epochs):.1f} epochs")
     elif converged_count >= 3:
         print(f"2 channels nearly sufficient: {converged_count}/5 converged")
