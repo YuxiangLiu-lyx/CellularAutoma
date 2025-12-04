@@ -1,0 +1,2933 @@
+{
+  "experiment": "Maze Transfer Learning: Fine-tune from Pretrained GoL",
+  "rule": {
+    "name": "Maze",
+    "survival": "1-5 neighbors",
+    "birth": "3 neighbors"
+  },
+  "date": "2025-12-04 00:42:14",
+  "pretrained_model": "run_11_l2_seed_20100.pth",
+  "total_time_seconds": 26.767804,
+  "total_time_minutes": 0.4461300666666667,
+  "configuration": {
+    "num_runs": 36,
+    "pretrained_models_count": 36,
+    "pretrained_models": [
+      "run_01_seed_300.pth",
+      "run_05_seed_700.pth",
+      "run_02_seed_400.pth",
+      "run_04_seed_600.pth",
+      "run_01_seed_5000.pth",
+      "run_02_seed_6100.pth",
+      "run_04_seed_6300.pth",
+      "run_02_l1_seed_10010.pth",
+      "run_14_l1_seed_10130.pth",
+      "run_09_l1_seed_10080.pth",
+      "run_23_l2_seed_20220.pth",
+      "run_05_none_seed_30040.pth",
+      "run_21_none_seed_30200.pth",
+      "run_28_l2_seed_20270.pth",
+      "run_16_l1_seed_10150.pth",
+      "run_09_l2_seed_20080.pth",
+      "run_01_l2_seed_20000.pth",
+      "run_07_l2_seed_20060.pth",
+      "run_13_l1_seed_10120.pth",
+      "run_24_l1_seed_10230.pth",
+      "run_13_l2_seed_20120.pth",
+      "run_08_none_seed_30070.pth",
+      "run_12_none_seed_30110.pth",
+      "run_04_l2_seed_20030.pth",
+      "run_06_l1_seed_10050.pth",
+      "run_27_l1_seed_10260.pth",
+      "run_19_l1_seed_10180.pth",
+      "run_12_l1_seed_10110.pth",
+      "run_03_l2_seed_20020.pth",
+      "run_29_l2_seed_20280.pth",
+      "run_22_l2_seed_20210.pth",
+      "run_24_none_seed_30230.pth",
+      "run_30_l1_seed_10290.pth",
+      "run_05_l2_seed_20040.pth",
+      "run_30_l2_seed_20290.pth",
+      "run_11_l2_seed_20100.pth"
+    ],
+    "train_samples": 10000,
+    "val_samples": 2000,
+    "max_epochs": 100,
+    "patience": 20,
+    "target_accuracy": 1.0,
+    "method": "fine-tune_all_parameters"
+  },
+  "summary": {
+    "converged_count": 36,
+    "convergence_rate": 1.0,
+    "convergence_epochs": [
+      3,
+      3,
+      2,
+      2,
+      3,
+      3,
+      2,
+      3,
+      2,
+      2,
+      2,
+      3,
+      6,
+      3,
+      2,
+      3,
+      1,
+      3,
+      2,
+      1,
+      4,
+      3,
+      6,
+      6,
+      6,
+      3,
+      3,
+      3,
+      6,
+      3,
+      3,
+      3,
+      2,
+      3,
+      3,
+      3
+    ],
+    "mean_convergence_epoch": 3.0833333333333335,
+    "median_convergence_epoch": 3.0,
+    "std_convergence_epoch": 1.3202482931462383,
+    "min_convergence_epoch": 1,
+    "max_convergence_epoch": 6
+  },
+  "saved_models_count": 36,
+  "results": [
+    {
+      "seed": 20010,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.4960053861141205,
+                0.49593135714530945,
+                0.4962204396724701
+              ],
+              [
+                0.4953979551792145,
+                -0.7205774784088135,
+                0.4953375458717346
+              ],
+              [
+                0.49637308716773987,
+                0.4953133463859558,
+                0.49537140130996704
+              ]
+            ],
+            "bias": -0.8083732724189758
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.7817115783691406,
+                -0.7813675999641418,
+                -0.7813528180122375
+              ],
+              [
+                -0.7813341021537781,
+                -1.2302818298339844,
+                -0.781352698802948
+              ],
+              [
+                -0.7813746333122253,
+                -0.7811833620071411,
+                -0.7813758850097656
+              ]
+            ],
+            "bias": 2.3442583084106445
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -2.1820788383483887,
+          "channel_1_weight": -4.448129177093506,
+          "bias": 2.165052890777588
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20010.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.91985078125,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.93350849609375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.998115234375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_01_seed_300.pth",
+      "pretrained_seed": 300,
+      "pretrained_reg_type": "unknown",
+      "pretrained_convergence_epoch": 26
+    },
+    {
+      "seed": 20020,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.46227237582206726,
+                0.46202951669692993,
+                0.46265703439712524
+              ],
+              [
+                0.4609740674495697,
+                -0.8028813004493713,
+                0.4607909917831421
+              ],
+              [
+                0.46248170733451843,
+                0.4622066915035248,
+                0.4617346525192261
+              ]
+            ],
+            "bias": -0.8377373218536377
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.6901954412460327,
+                -0.6898624300956726,
+                -0.6901501417160034
+              ],
+              [
+                -0.6901774406433105,
+                -1.129481315612793,
+                -0.6901717185974121
+              ],
+              [
+                -0.6902227997779846,
+                -0.6901919841766357,
+                -0.6901482343673706
+              ]
+            ],
+            "bias": 2.0704221725463867
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -1.9469377994537354,
+          "channel_1_weight": -4.101253986358643,
+          "bias": 1.5187329053878784
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20020.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.9214763671875,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.92532158203125,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.99675390625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_05_seed_700.pth",
+      "pretrained_seed": 700,
+      "pretrained_reg_type": "unknown",
+      "pretrained_convergence_epoch": 20
+    },
+    {
+      "seed": 20030,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.4085916578769684,
+                -0.40849098563194275,
+                -0.4095187783241272
+              ],
+              [
+                -0.40791237354278564,
+                0.4734349846839905,
+                -0.4075898230075836
+              ],
+              [
+                -0.4091283082962036,
+                -0.4086928367614746,
+                -0.40819022059440613
+              ]
+            ],
+            "bias": 2.1739206314086914
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.7389016151428223,
+                -0.738877534866333,
+                -0.7389748692512512
+              ],
+              [
+                -0.7389737367630005,
+                -0.8705430626869202,
+                -0.7389258742332458
+              ],
+              [
+                -0.7388821244239807,
+                -0.7389215230941772,
+                -0.7389533519744873
+              ]
+            ],
+            "bias": 2.2167112827301025
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 2.2037224769592285,
+          "channel_1_weight": -4.4299798011779785,
+          "bias": -1.2606089115142822
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20030.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.8931759765625,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.95770078125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_02_seed_400.pth",
+      "pretrained_seed": 400,
+      "pretrained_reg_type": "unknown",
+      "pretrained_convergence_epoch": 20
+    },
+    {
+      "seed": 20040,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.735763430595398,
+                -0.7357033491134644,
+                -0.7357357740402222
+              ],
+              [
+                -0.7358703017234802,
+                -0.8756498098373413,
+                -0.7357222437858582
+              ],
+              [
+                -0.7358242273330688,
+                -0.7357459664344788,
+                -0.7357412576675415
+              ]
+            ],
+            "bias": 2.20729923248291
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.29203349351882935,
+                -0.29154422879219055,
+                -0.2922123968601227
+              ],
+              [
+                -0.2913380265235901,
+                0.40762367844581604,
+                -0.2917259633541107
+              ],
+              [
+                -0.2921812832355499,
+                -0.2918993830680847,
+                -0.29178550839424133
+              ]
+            ],
+            "bias": 1.5073131322860718
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -4.297151565551758,
+          "channel_1_weight": 2.918273448944092,
+          "bias": -1.1162350177764893
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20040.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.89709169921875,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.97933623046875,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_04_seed_600.pth",
+      "pretrained_seed": 600,
+      "pretrained_reg_type": "unknown",
+      "pretrained_convergence_epoch": 18
+    },
+    {
+      "seed": 20050,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.9400297999382019,
+                -0.9399696588516235,
+                -0.9400290250778198
+              ],
+              [
+                -0.9399517178535461,
+                -1.0854747295379639,
+                -0.940046489238739
+              ],
+              [
+                -0.9399945139884949,
+                -0.9397426843643188,
+                -0.9398672580718994
+              ]
+            ],
+            "bias": 2.8193812370300293
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.414917528629303,
+                -0.414912611246109,
+                -0.4154733717441559
+              ],
+              [
+                -0.41430872678756714,
+                0.5819059610366821,
+                -0.4142051041126251
+              ],
+              [
+                -0.41568246483802795,
+                -0.4147585332393646,
+                -0.4148237407207489
+              ]
+            ],
+            "bias": 2.0246827602386475
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -4.256893634796143,
+          "channel_1_weight": 2.616750955581665,
+          "bias": -1.0113393068313599
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20050.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.88917373046875,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.913490234375,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.95674423828125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_01_seed_5000.pth",
+      "pretrained_seed": 5000,
+      "pretrained_reg_type": "unknown",
+      "pretrained_convergence_epoch": 24
+    },
+    {
+      "seed": 20060,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.6083574891090393,
+                0.6080201268196106,
+                0.607600748538971
+              ],
+              [
+                0.6082233786582947,
+                -0.836105465888977,
+                0.6078048944473267
+              ],
+              [
+                0.6078554391860962,
+                0.6077277660369873,
+                0.6085739135742188
+              ]
+            ],
+            "bias": -0.9990924000740051
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.7794244885444641,
+                -0.779337465763092,
+                -0.7793462872505188
+              ],
+              [
+                -0.7792947888374329,
+                -1.2219085693359375,
+                -0.7795298099517822
+              ],
+              [
+                -0.7795328497886658,
+                -0.7794137597084045,
+                -0.7796351313591003
+              ]
+            ],
+            "bias": 2.3384501934051514
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -1.8586688041687012,
+          "channel_1_weight": -4.611875057220459,
+          "bias": 2.2666666507720947
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20060.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.92072734375,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.93608818359375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.9885359375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_02_seed_6100.pth",
+      "pretrained_seed": 6100,
+      "pretrained_reg_type": "unknown",
+      "pretrained_convergence_epoch": 29
+    },
+    {
+      "seed": 20070,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.4063435196876526,
+                -0.40640124678611755,
+                -0.4069591760635376
+              ],
+              [
+                -0.40594005584716797,
+                0.4893583655357361,
+                -0.40566888451576233
+              ],
+              [
+                -0.4067794978618622,
+                -0.4066830277442932,
+                -0.4064502418041229
+              ]
+            ],
+            "bias": 2.1640899181365967
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.8260294198989868,
+                -0.8260922431945801,
+                -0.8260924220085144
+              ],
+              [
+                -0.8260793685913086,
+                -0.9374606013298035,
+                -0.8260471224784851
+              ],
+              [
+                -0.8261686563491821,
+                -0.8260501623153687,
+                -0.8260208964347839
+              ]
+            ],
+            "bias": 2.477844476699829
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 2.2747435569763184,
+          "channel_1_weight": -3.9965908527374268,
+          "bias": -1.3166356086730957
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20070.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.89870283203125,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.9728287109375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_04_seed_6300.pth",
+      "pretrained_seed": 6300,
+      "pretrained_reg_type": "unknown",
+      "pretrained_convergence_epoch": 19
+    },
+    {
+      "seed": 20080,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.510540246963501,
+                0.5096592307090759,
+                0.511134922504425
+              ],
+              [
+                0.5093625783920288,
+                -0.7765268087387085,
+                0.5088557004928589
+              ],
+              [
+                0.5108362436294556,
+                0.5108122229576111,
+                0.5100545883178711
+              ]
+            ],
+            "bias": -0.87674880027771
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.7253013849258423,
+                -0.7254606485366821,
+                -0.7254738807678223
+              ],
+              [
+                -0.7255598306655884,
+                -1.1682443618774414,
+                -0.7252291440963745
+              ],
+              [
+                -0.7255151271820068,
+                -0.7253141403198242,
+                -0.7253546714782715
+              ]
+            ],
+            "bias": 2.1749792098999023
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -1.8527506589889526,
+          "channel_1_weight": -4.202638626098633,
+          "bias": 1.7590800523757935
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20080.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.9201259765625,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.9253849609375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.9877564453125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_02_l1_seed_10010.pth",
+      "pretrained_seed": 10010,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 21
+    },
+    {
+      "seed": 20090,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.33436858654022217,
+                -0.3342664837837219,
+                -0.3343207538127899
+              ],
+              [
+                -0.3343257009983063,
+                0.41191601753234863,
+                -0.33436325192451477
+              ],
+              [
+                -0.33438849449157715,
+                -0.3343718349933624,
+                -0.3344131410121918
+              ]
+            ],
+            "bias": 1.6712369918823242
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.8205652236938477,
+                -0.820421040058136,
+                -0.8204751014709473
+              ],
+              [
+                -0.8204346299171448,
+                -0.9168944954872131,
+                -0.8205596208572388
+              ],
+              [
+                -0.8204576969146729,
+                -0.8204405903816223,
+                -0.8202880620956421
+              ]
+            ],
+            "bias": 2.4607598781585693
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 3.1109695434570312,
+          "channel_1_weight": -4.596561908721924,
+          "bias": -1.0454363822937012
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20090.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.8781560546875,
+          "val_acc": 0.8854560546875
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.9153294921875,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_14_l1_seed_10130.pth",
+      "pretrained_seed": 10130,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 22
+    },
+    {
+      "seed": 20100,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.3660063147544861,
+                -0.3664378523826599,
+                -0.36708593368530273
+              ],
+              [
+                -0.36552295088768005,
+                0.43031513690948486,
+                -0.3649608790874481
+              ],
+              [
+                -0.3669113218784332,
+                -0.36646878719329834,
+                -0.36591097712516785
+              ]
+            ],
+            "bias": 1.8617128133773804
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.7594150304794312,
+                -0.7593590617179871,
+                -0.7593744397163391
+              ],
+              [
+                -0.7593528032302856,
+                -0.9271913170814514,
+                -0.7592934966087341
+              ],
+              [
+                -0.7593579292297363,
+                -0.7594136595726013,
+                -0.7594738006591797
+              ]
+            ],
+            "bias": 2.2776072025299072
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 2.371781826019287,
+          "channel_1_weight": -4.325862407684326,
+          "bias": -0.9922856688499451
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20100.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.8927435546875,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.9441626953125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_09_l1_seed_10080.pth",
+      "pretrained_seed": 10080,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 21
+    },
+    {
+      "seed": 20110,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.3665398359298706,
+                -0.36619654297828674,
+                -0.36720961332321167
+              ],
+              [
+                -0.36522114276885986,
+                0.4475403428077698,
+                -0.3652283847332001
+              ],
+              [
+                -0.36712175607681274,
+                -0.36646568775177,
+                -0.3662683069705963
+              ]
+            ],
+            "bias": 1.9063550233840942
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.724406898021698,
+                -0.7244311571121216,
+                -0.7244680523872375
+              ],
+              [
+                -0.7243772149085999,
+                -0.8881704807281494,
+                -0.7244212031364441
+              ],
+              [
+                -0.7243569493293762,
+                -0.7243300676345825,
+                -0.724443793296814
+              ]
+            ],
+            "bias": 2.17374849319458
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 2.3561716079711914,
+          "channel_1_weight": -4.513822555541992,
+          "bias": -1.1031607389450073
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20110.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.896487890625,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.95136162109375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_23_l2_seed_20220.pth",
+      "pretrained_seed": 20220,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 19
+    },
+    {
+      "seed": 20120,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.8049548268318176,
+                -0.804967999458313,
+                -0.805023193359375
+              ],
+              [
+                -0.8050458431243896,
+                -1.2582833766937256,
+                -0.8050008416175842
+              ],
+              [
+                -0.8050604462623596,
+                -0.8049903512001038,
+                -0.8049875497817993
+              ]
+            ],
+            "bias": 2.414602279663086
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.5516327023506165,
+                0.5521221160888672,
+                0.5523293018341064
+              ],
+              [
+                0.5513526201248169,
+                -0.7784925103187561,
+                0.5513526201248169
+              ],
+              [
+                0.5525423288345337,
+                0.5524348616600037,
+                0.5521179437637329
+              ]
+            ],
+            "bias": -0.9406431317329407
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -4.433705806732178,
+          "channel_1_weight": -2.0701632499694824,
+          "bias": 2.2123820781707764
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20120.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.92050751953125,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.93035400390625,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.97853583984375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_05_none_seed_30040.pth",
+      "pretrained_seed": 30040,
+      "pretrained_reg_type": "none",
+      "pretrained_convergence_epoch": 28
+    },
+    {
+      "seed": 20130,
+      "converged": true,
+      "convergence_epoch": 6,
+      "best_val_acc": 1.0,
+      "epochs_trained": 6,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.545319139957428,
+                -0.5452858805656433,
+                -0.545281171798706
+              ],
+              [
+                -0.5455347299575806,
+                -1.091079592704773,
+                -0.5453418493270874
+              ],
+              [
+                -0.5453718900680542,
+                -0.5452701449394226,
+                -0.5452826619148254
+              ]
+            ],
+            "bias": 1.6369770765304565
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.4065685570240021,
+                0.4064824879169464,
+                0.40644800662994385
+              ],
+              [
+                0.4065497815608978,
+                -0.6370557546615601,
+                0.4064802825450897
+              ],
+              [
+                0.4065459668636322,
+                0.4065333306789398,
+                0.4066249132156372
+              ]
+            ],
+            "bias": -1.2198941707611084
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -3.5259757041931152,
+          "channel_1_weight": -3.3648438453674316,
+          "bias": 0.7738847136497498
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20130.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.86974677734375,
+          "val_acc": 0.8709697265625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.906635546875,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.9452318359375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 4,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 5,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 6,
+          "train_acc": 0.9942130859375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_21_none_seed_30200.pth",
+      "pretrained_seed": 30200,
+      "pretrained_reg_type": "none",
+      "pretrained_convergence_epoch": 8
+    },
+    {
+      "seed": 20140,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.3727700114250183,
+                -0.3722885549068451,
+                -0.37356308102607727
+              ],
+              [
+                -0.37262603640556335,
+                0.5109167098999023,
+                -0.37254753708839417
+              ],
+              [
+                -0.37285783886909485,
+                -0.37326163053512573,
+                -0.3730669915676117
+              ]
+            ],
+            "bias": 1.7524207830429077
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -1.0136263370513916,
+                -1.0134303569793701,
+                -1.0136431455612183
+              ],
+              [
+                -1.0135278701782227,
+                -1.2090243101119995,
+                -1.0135217905044556
+              ],
+              [
+                -1.0136964321136475,
+                -1.013679027557373,
+                -1.0134913921356201
+              ]
+            ],
+            "bias": 3.0404090881347656
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 3.159391164779663,
+          "channel_1_weight": -4.37574577331543,
+          "bias": -0.8881527781486511
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20140.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.88925947265625,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.913490234375,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.95110771484375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_28_l2_seed_20270.pth",
+      "pretrained_seed": 20270,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 31
+    },
+    {
+      "seed": 20150,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.8348852396011353,
+                -0.834550142288208,
+                -0.8347153067588806
+              ],
+              [
+                -0.8348335027694702,
+                -0.938405454158783,
+                -0.8347899317741394
+              ],
+              [
+                -0.8347127437591553,
+                -0.8348591923713684,
+                -0.834515392780304
+              ]
+            ],
+            "bias": 2.503913402557373
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.3305683434009552,
+                -0.3307400643825531,
+                -0.33112528920173645
+              ],
+              [
+                -0.3300724923610687,
+                0.4480697810649872,
+                -0.3298393189907074
+              ],
+              [
+                -0.3314341604709625,
+                -0.3311867415904999,
+                -0.3305774927139282
+              ]
+            ],
+            "bias": 1.754883885383606
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -3.833963632583618,
+          "channel_1_weight": 2.7000184059143066,
+          "bias": -1.2982020378112793
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20150.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.90321611328125,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.98711552734375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_16_l1_seed_10150.pth",
+      "pretrained_seed": 10150,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 18
+    },
+    {
+      "seed": 20160,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.5112581849098206,
+                0.5106456875801086,
+                0.5121802091598511
+              ],
+              [
+                0.5103880167007446,
+                -0.7700854539871216,
+                0.5095480680465698
+              ],
+              [
+                0.5117344260215759,
+                0.5110048055648804,
+                0.5109623670578003
+              ]
+            ],
+            "bias": -1.2305188179016113
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.6876288056373596,
+                -0.6874966025352478,
+                -0.6876119375228882
+              ],
+              [
+                -0.6876118779182434,
+                -1.128313422203064,
+                -0.6876296997070312
+              ],
+              [
+                -0.6876051425933838,
+                -0.6876187920570374,
+                -0.6874105334281921
+              ]
+            ],
+            "bias": 2.0623624324798584
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -2.0695738792419434,
+          "channel_1_weight": -4.16287088394165,
+          "bias": 1.476722240447998
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20160.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.92610703125,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.951459765625,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.99585517578125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_09_l2_seed_20080.pth",
+      "pretrained_seed": 20080,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 21
+    },
+    {
+      "seed": 20170,
+      "converged": true,
+      "convergence_epoch": 1,
+      "best_val_acc": 1.0,
+      "epochs_trained": 1,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.8970707058906555,
+                0.8973145484924316,
+                0.8969109058380127
+              ],
+              [
+                0.8971804976463318,
+                1.5516846179962158,
+                0.8984285593032837
+              ],
+              [
+                0.8968893885612488,
+                0.896979570388794,
+                0.8976328372955322
+              ]
+            ],
+            "bias": -0.8141047954559326
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.627859354019165,
+                0.6277916431427002,
+                0.6273987293243408
+              ],
+              [
+                0.6278084516525269,
+                0.28668347001075745,
+                0.6277514100074768
+              ],
+              [
+                0.6278693079948425,
+                0.6277382373809814,
+                0.6278515458106995
+              ]
+            ],
+            "bias": -1.8833842277526855
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 1.5873445272445679,
+          "channel_1_weight": -3.4850974082946777,
+          "bias": -2.507262945175171
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20170.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.9605220703125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_01_l2_seed_20000.pth",
+      "pretrained_seed": 20000,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 14
+    },
+    {
+      "seed": 20180,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.6219378709793091,
+                -0.621959924697876,
+                -0.6219446063041687
+              ],
+              [
+                -0.6220731735229492,
+                -1.031941294670105,
+                -0.6220369935035706
+              ],
+              [
+                -0.6219973564147949,
+                -0.6218547821044922,
+                -0.6220129132270813
+              ]
+            ],
+            "bias": 1.865749716758728
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.5153259038925171,
+                0.5152662396430969,
+                0.5158182978630066
+              ],
+              [
+                0.5147744417190552,
+                -0.7512363195419312,
+                0.5145225524902344
+              ],
+              [
+                0.5155478119850159,
+                0.5151804089546204,
+                0.5153055191040039
+              ]
+            ],
+            "bias": -0.8712615966796875
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -5.4407830238342285,
+          "channel_1_weight": -2.093536853790283,
+          "bias": 2.0749521255493164
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20180.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.91994267578125,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.94909052734375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.98355400390625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_07_l2_seed_20060.pth",
+      "pretrained_seed": 20060,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 24
+    },
+    {
+      "seed": 20190,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.3453759551048279,
+                -0.34517478942871094,
+                -0.3458671271800995
+              ],
+              [
+                -0.34465521574020386,
+                0.45651084184646606,
+                -0.3443804383277893
+              ],
+              [
+                -0.34582826495170593,
+                -0.34526243805885315,
+                -0.34497061371803284
+              ]
+            ],
+            "bias": 1.8307260274887085
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.8292876482009888,
+                -0.8292453289031982,
+                -0.829261064529419
+              ],
+              [
+                -0.8292469382286072,
+                -0.9470058083534241,
+                -0.8292983770370483
+              ],
+              [
+                -0.8292202353477478,
+                -0.8292324542999268,
+                -0.8292123675346375
+              ]
+            ],
+            "bias": 2.487581253051758
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 2.5596768856048584,
+          "channel_1_weight": -3.8748586177825928,
+          "bias": -1.264039158821106
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20190.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.90225107421875,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.9771712890625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_13_l1_seed_10120.pth",
+      "pretrained_seed": 10120,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 17
+    },
+    {
+      "seed": 20200,
+      "converged": true,
+      "convergence_epoch": 1,
+      "best_val_acc": 1.0,
+      "epochs_trained": 1,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.7824150323867798,
+                0.7827659249305725,
+                0.7831913232803345
+              ],
+              [
+                0.7835248708724976,
+                1.3431289196014404,
+                0.7842583656311035
+              ],
+              [
+                0.7826837301254272,
+                0.7831242680549622,
+                0.7829981446266174
+              ]
+            ],
+            "bias": -0.7013259530067444
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.6593799591064453,
+                0.6593815088272095,
+                0.659451425075531
+              ],
+              [
+                0.6594552397727966,
+                0.31509050726890564,
+                0.6593708395957947
+              ],
+              [
+                0.6593638062477112,
+                0.6595749855041504,
+                0.659405529499054
+              ]
+            ],
+            "bias": -1.977608561515808
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 1.9493485689163208,
+          "channel_1_weight": -3.5676283836364746,
+          "bias": -2.682328939437866
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20200.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.95728837890625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_24_l1_seed_10230.pth",
+      "pretrained_seed": 10230,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 16
+    },
+    {
+      "seed": 20210,
+      "converged": true,
+      "convergence_epoch": 4,
+      "best_val_acc": 1.0,
+      "epochs_trained": 4,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.4155665338039398,
+                -0.4156115651130676,
+                -0.4157171845436096
+              ],
+              [
+                -0.41556036472320557,
+                0.650524914264679,
+                -0.4156531095504761
+              ],
+              [
+                -0.4155774414539337,
+                -0.4155593812465668,
+                -0.41537851095199585
+              ]
+            ],
+            "bias": 2.0777993202209473
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.8480386734008789,
+                -0.8479505777359009,
+                -0.8480867147445679
+              ],
+              [
+                -0.8479546308517456,
+                -1.1115517616271973,
+                -0.8480861783027649
+              ],
+              [
+                -0.8480666875839233,
+                -0.8477316498756409,
+                -0.8480231165885925
+              ]
+            ],
+            "bias": 2.543574333190918
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 2.4054207801818848,
+          "channel_1_weight": -4.7264909744262695,
+          "bias": -1.0640101432800293
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20210.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.87710517578125,
+          "val_acc": 0.8854560546875
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.912087109375,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.913490234375,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 4,
+          "train_acc": 0.9903837890625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_13_l2_seed_20120.pth",
+      "pretrained_seed": 20120,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 23
+    },
+    {
+      "seed": 20220,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.7595458030700684,
+                -0.7595921158790588,
+                -0.759955108165741
+              ],
+              [
+                -0.7595584988594055,
+                -1.210686206817627,
+                -0.7595885992050171
+              ],
+              [
+                -0.7596054673194885,
+                -0.759635329246521,
+                -0.759486734867096
+              ]
+            ],
+            "bias": 2.2782645225524902
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.49760380387306213,
+                0.49791252613067627,
+                0.49827301502227783
+              ],
+              [
+                0.49699392914772034,
+                -0.7103415131568909,
+                0.49650678038597107
+              ],
+              [
+                0.4983343780040741,
+                0.49734729528427124,
+                0.4974327087402344
+              ]
+            ],
+            "bias": -0.8907195925712585
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -4.594961643218994,
+          "channel_1_weight": -2.268155097961426,
+          "bias": 2.0763633251190186
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20220.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.9195765625,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.92872080078125,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.97892490234375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_08_none_seed_30070.pth",
+      "pretrained_seed": 30070,
+      "pretrained_reg_type": "none",
+      "pretrained_convergence_epoch": 27
+    },
+    {
+      "seed": 20230,
+      "converged": true,
+      "convergence_epoch": 6,
+      "best_val_acc": 1.0,
+      "epochs_trained": 6,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.5342742204666138,
+                -0.5341843366622925,
+                -0.5341989398002625
+              ],
+              [
+                -0.534164547920227,
+                -1.068186640739441,
+                -0.5342012047767639
+              ],
+              [
+                -0.5341224074363708,
+                -0.5342108607292175,
+                -0.5341097116470337
+              ]
+            ],
+            "bias": 1.602264165878296
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.431733638048172,
+                0.4315084218978882,
+                0.4318274259567261
+              ],
+              [
+                0.4315304160118103,
+                -0.6560408473014832,
+                0.4314267337322235
+              ],
+              [
+                0.4316398501396179,
+                0.4316435754299164,
+                0.43150314688682556
+              ]
+            ],
+            "bias": -1.294269323348999
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -3.7178099155426025,
+          "channel_1_weight": -3.167806386947632,
+          "bias": 0.7877649068832397
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20230.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.86974677734375,
+          "val_acc": 0.8709697265625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.90262060546875,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.94780068359375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 4,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 5,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 6,
+          "train_acc": 0.9879083984375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_12_none_seed_30110.pth",
+      "pretrained_seed": 30110,
+      "pretrained_reg_type": "none",
+      "pretrained_convergence_epoch": 8
+    },
+    {
+      "seed": 20240,
+      "converged": true,
+      "convergence_epoch": 6,
+      "best_val_acc": 1.0,
+      "epochs_trained": 6,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.646971583366394,
+                -0.6469411849975586,
+                -0.6470933556556702
+              ],
+              [
+                -0.6469760537147522,
+                -1.2845032215118408,
+                -0.6468561291694641
+              ],
+              [
+                -0.6469559669494629,
+                -0.6469415426254272,
+                -0.6466723680496216
+              ]
+            ],
+            "bias": 1.9409666061401367
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.4189166724681854,
+                0.4191597104072571,
+                0.4188103973865509
+              ],
+              [
+                0.41894590854644775,
+                -0.644842267036438,
+                0.4189217984676361
+              ],
+              [
+                0.4191588759422302,
+                0.4189918041229248,
+                0.4189237654209137
+              ]
+            ],
+            "bias": -1.2565656900405884
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -2.824187755584717,
+          "channel_1_weight": -3.2369086742401123,
+          "bias": 0.7783579230308533
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20240.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.86974677734375,
+          "val_acc": 0.8709697265625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.8992548828125,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.92279921875,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 4,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 5,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 6,
+          "train_acc": 0.99141884765625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_04_l2_seed_20030.pth",
+      "pretrained_seed": 20030,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 8
+    },
+    {
+      "seed": 20250,
+      "converged": true,
+      "convergence_epoch": 6,
+      "best_val_acc": 1.0,
+      "epochs_trained": 6,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.6156196594238281,
+                -0.6154336333274841,
+                -0.6156358122825623
+              ],
+              [
+                -0.6154932379722595,
+                -1.231284260749817,
+                -0.6156104803085327
+              ],
+              [
+                -0.6155480742454529,
+                -0.6155260801315308,
+                -0.6156801581382751
+              ]
+            ],
+            "bias": 1.8472198247909546
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.4017888307571411,
+                0.4016575217247009,
+                0.40165647864341736
+              ],
+              [
+                0.4016743302345276,
+                -0.6252351999282837,
+                0.40147751569747925
+              ],
+              [
+                0.4013232886791229,
+                0.40173137187957764,
+                0.40167036652565
+              ]
+            ],
+            "bias": -1.204163908958435
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -3.1809043884277344,
+          "channel_1_weight": -3.349989891052246,
+          "bias": 0.791673481464386
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20250.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.86974677734375,
+          "val_acc": 0.8709697265625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.91293359375,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.9294208984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 4,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 5,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 6,
+          "train_acc": 0.99921611328125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_06_l1_seed_10050.pth",
+      "pretrained_seed": 10050,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 9
+    },
+    {
+      "seed": 20260,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.5166886448860168,
+                0.5161504149436951,
+                0.5170824527740479
+              ],
+              [
+                0.515603244304657,
+                -0.741279661655426,
+                0.514633297920227
+              ],
+              [
+                0.5171958804130554,
+                0.5160332918167114,
+                0.5158330798149109
+              ]
+            ],
+            "bias": -1.2264692783355713
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.7179660797119141,
+                -0.718063473701477,
+                -0.7180947065353394
+              ],
+              [
+                -0.7180631756782532,
+                -1.169449806213379,
+                -0.7180633544921875
+              ],
+              [
+                -0.7179538011550903,
+                -0.7180517315864563,
+                -0.7180355787277222
+              ]
+            ],
+            "bias": 2.153977870941162
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -2.0745644569396973,
+          "channel_1_weight": -4.173562526702881,
+          "bias": 1.5480488538742065
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20260.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.92180908203125,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.951459765625,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.99253369140625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_27_l1_seed_10260.pth",
+      "pretrained_seed": 10260,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 21
+    },
+    {
+      "seed": 20270,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.2661569118499756,
+                -0.2662917971611023,
+                -0.26695716381073
+              ],
+              [
+                -0.2663133442401886,
+                0.41980087757110596,
+                -0.2658158242702484
+              ],
+              [
+                -0.26703038811683655,
+                -0.26624995470046997,
+                -0.2666252553462982
+              ]
+            ],
+            "bias": 1.192254662513733
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.9788227081298828,
+                -0.9788551926612854,
+                -0.9787183403968811
+              ],
+              [
+                -0.9787133932113647,
+                -1.1784299612045288,
+                -0.978773295879364
+              ],
+              [
+                -0.9788938760757446,
+                -0.9788534641265869,
+                -0.9786745309829712
+              ]
+            ],
+            "bias": 2.936483860015869
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 4.760098457336426,
+          "channel_1_weight": -4.85053825378418,
+          "bias": -0.7964296936988831
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20270.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.88715400390625,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.913490234375,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.97939462890625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_19_l1_seed_10180.pth",
+      "pretrained_seed": 10180,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 35
+    },
+    {
+      "seed": 20280,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.46970516443252563,
+                0.4693711996078491,
+                0.47067609429359436
+              ],
+              [
+                0.46905890107154846,
+                -0.8045576810836792,
+                0.4684083163738251
+              ],
+              [
+                0.47025081515312195,
+                0.4701906144618988,
+                0.46948671340942383
+              ]
+            ],
+            "bias": -0.8232102990150452
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.6459705829620361,
+                -0.6457799673080444,
+                -0.6462175250053406
+              ],
+              [
+                -0.6460564136505127,
+                -1.0499498844146729,
+                -0.6462192535400391
+              ],
+              [
+                -0.646194577217102,
+                -0.6461425423622131,
+                -0.6459932923316956
+              ]
+            ],
+            "bias": 1.937703251838684
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -1.977046012878418,
+          "channel_1_weight": -4.195078372955322,
+          "bias": 1.6007052659988403
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20280.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.92024306640625,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.931574609375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.9945322265625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_12_l1_seed_10110.pth",
+      "pretrained_seed": 10110,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 16
+    },
+    {
+      "seed": 20290,
+      "converged": true,
+      "convergence_epoch": 6,
+      "best_val_acc": 1.0,
+      "epochs_trained": 6,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.4157780408859253,
+                0.4158911406993866,
+                0.41591599583625793
+              ],
+              [
+                0.4157862663269043,
+                -0.6453423500061035,
+                0.41589054465293884
+              ],
+              [
+                0.4158055782318115,
+                0.41589993238449097,
+                0.41583114862442017
+              ]
+            ],
+            "bias": -1.2479808330535889
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.6259390115737915,
+                -0.6259202361106873,
+                -0.6260585784912109
+              ],
+              [
+                -0.6258861422538757,
+                -1.2520952224731445,
+                -0.6260029673576355
+              ],
+              [
+                -0.6260596513748169,
+                -0.6259140372276306,
+                -0.6258695721626282
+              ]
+            ],
+            "bias": 1.8781591653823853
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -3.2025139331817627,
+          "channel_1_weight": -3.040281295776367,
+          "bias": 0.7596956491470337
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20290.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.86974677734375,
+          "val_acc": 0.8709697265625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.90105419921875,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.926489453125,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 4,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 5,
+          "train_acc": 0.9709833984375,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 6,
+          "train_acc": 0.99252392578125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_03_l2_seed_20020.pth",
+      "pretrained_seed": 20020,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 9
+    },
+    {
+      "seed": 20300,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.3720459043979645,
+                -0.37188801169395447,
+                -0.3723069727420807
+              ],
+              [
+                -0.3715517520904541,
+                0.5341863632202148,
+                -0.37150838971138
+              ],
+              [
+                -0.3723199665546417,
+                -0.3728298544883728,
+                -0.3719698488712311
+              ]
+            ],
+            "bias": 1.8343217372894287
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.8168260455131531,
+                -0.8168351650238037,
+                -0.8163898587226868
+              ],
+              [
+                -0.8168587684631348,
+                -0.9626421332359314,
+                -0.816728413105011
+              ],
+              [
+                -0.8167105913162231,
+                -0.81682950258255,
+                -0.8166284561157227
+              ]
+            ],
+            "bias": 2.4503707885742188
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 2.979793071746826,
+          "channel_1_weight": -5.0068440437316895,
+          "bias": -1.1089181900024414
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20300.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.87938662109375,
+          "val_acc": 0.8854560546875
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.9124916015625,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.97555361328125,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_29_l2_seed_20280.pth",
+      "pretrained_seed": 20280,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 23
+    },
+    {
+      "seed": 20310,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.39597150683403015,
+                -0.3961355686187744,
+                -0.3964543342590332
+              ],
+              [
+                -0.39621585607528687,
+                0.5287562012672424,
+                -0.3951959013938904
+              ],
+              [
+                -0.3965207636356354,
+                -0.39595749974250793,
+                -0.39651620388031006
+              ]
+            ],
+            "bias": 1.8777499198913574
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.8865792751312256,
+                -0.8869842886924744,
+                -0.8869541883468628
+              ],
+              [
+                -0.8869455456733704,
+                -1.0771620273590088,
+                -0.8868731260299683
+              ],
+              [
+                -0.8867536783218384,
+                -0.8868060111999512,
+                -0.8867188692092896
+              ]
+            ],
+            "bias": 2.661163568496704
+          }
+        },
+        "conv2": {
+          "channel_0_weight": 2.9310483932495117,
+          "channel_1_weight": -4.943779468536377,
+          "bias": -0.9137324094772339
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20310.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.89087021484375,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.913490234375,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.9450029296875,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_22_l2_seed_20210.pth",
+      "pretrained_seed": 20210,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 27
+    },
+    {
+      "seed": 20320,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.856530487537384,
+                -0.8565348982810974,
+                -0.8565832376480103
+              ],
+              [
+                -0.8565316200256348,
+                -1.077172040939331,
+                -0.856529712677002
+              ],
+              [
+                -0.8565855622291565,
+                -0.8565804958343506,
+                -0.8564895987510681
+              ]
+            ],
+            "bias": 2.5700292587280273
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.38360676169395447,
+                -0.38369929790496826,
+                -0.3836367428302765
+              ],
+              [
+                -0.3836119771003723,
+                0.5474110841751099,
+                -0.38375788927078247
+              ],
+              [
+                -0.383780837059021,
+                -0.3837112486362457,
+                -0.38357213139533997
+              ]
+            ],
+            "bias": 1.9182769060134888
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -4.296024322509766,
+          "channel_1_weight": 2.457982063293457,
+          "bias": -0.9748868942260742
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20320.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.88912548828125,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.9161265625,
+          "val_acc": 0.9137470703125
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.96407177734375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_24_none_seed_30230.pth",
+      "pretrained_seed": 30230,
+      "pretrained_reg_type": "none",
+      "pretrained_convergence_epoch": 17
+    },
+    {
+      "seed": 20330,
+      "converged": true,
+      "convergence_epoch": 2,
+      "best_val_acc": 1.0,
+      "epochs_trained": 2,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.41311854124069214,
+                0.4117870628833771,
+                0.41356614232063293
+              ],
+              [
+                0.4126286506652832,
+                -0.5906939506530762,
+                0.4119863212108612
+              ],
+              [
+                0.41322189569473267,
+                0.4125816226005554,
+                0.4124535322189331
+              ]
+            ],
+            "bias": -1.0006272792816162
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.6164997816085815,
+                -0.6165422201156616,
+                -0.6163347363471985
+              ],
+              [
+                -0.61638343334198,
+                -0.9301655292510986,
+                -0.6163477897644043
+              ],
+              [
+                -0.6163750290870667,
+                -0.6164028644561768,
+                -0.6165029406547546
+              ]
+            ],
+            "bias": 1.8496156930923462
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -2.168001174926758,
+          "channel_1_weight": -4.134263038635254,
+          "bias": 1.2684439420700073
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20330.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.9319474609375,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.9525177734375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_30_l1_seed_10290.pth",
+      "pretrained_seed": 10290,
+      "pretrained_reg_type": "l1",
+      "pretrained_convergence_epoch": 18
+    },
+    {
+      "seed": 20340,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.48066246509552,
+                0.48054444789886475,
+                0.4807482063770294
+              ],
+              [
+                0.480616956949234,
+                -0.7346763610839844,
+                0.4806484282016754
+              ],
+              [
+                0.48066386580467224,
+                0.4806842803955078,
+                0.48067766427993774
+              ]
+            ],
+            "bias": -1.1878948211669922
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.6395524144172668,
+                -0.6395301222801208,
+                -0.63956618309021
+              ],
+              [
+                -0.6395320892333984,
+                -1.0651832818984985,
+                -0.6394467353820801
+              ],
+              [
+                -0.6394917368888855,
+                -0.6395441293716431,
+                -0.6395426392555237
+              ]
+            ],
+            "bias": 1.9183491468429565
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -2.2926025390625,
+          "channel_1_weight": -4.19183349609375,
+          "bias": 1.343024492263794
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20340.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.92834130859375,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.951459765625,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.99529072265625,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_05_l2_seed_20040.pth",
+      "pretrained_seed": 20040,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 18
+    },
+    {
+      "seed": 20350,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                -0.720775842666626,
+                -0.7207680940628052,
+                -0.7205880880355835
+              ],
+              [
+                -0.7208502292633057,
+                -1.0462969541549683,
+                -0.7207363843917847
+              ],
+              [
+                -0.7206217050552368,
+                -0.720562219619751,
+                -0.720826268196106
+              ]
+            ],
+            "bias": 2.16163969039917
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                0.538257896900177,
+                0.5383185148239136,
+                0.5393154621124268
+              ],
+              [
+                0.5376594066619873,
+                -0.7809886932373047,
+                0.5373095870018005
+              ],
+              [
+                0.5387292504310608,
+                0.5387163758277893,
+                0.5383911728858948
+              ]
+            ],
+            "bias": -0.8073578476905823
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -4.877992153167725,
+          "channel_1_weight": -2.204563856124878,
+          "bias": 2.550368070602417
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20350.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.91953994140625,
+          "val_acc": 0.9228115234375
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.93063720703125,
+          "val_acc": 0.971708984375
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.987446875,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_30_l2_seed_20290.pth",
+      "pretrained_seed": 20290,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 24
+    },
+    {
+      "seed": 20360,
+      "converged": true,
+      "convergence_epoch": 3,
+      "best_val_acc": 1.0,
+      "epochs_trained": 3,
+      "weights": {
+        "conv1": {
+          "channel_0": {
+            "kernel": [
+              [
+                0.43382227420806885,
+                0.433618426322937,
+                0.4334491193294525
+              ],
+              [
+                0.4334811270236969,
+                -0.6967975497245789,
+                0.43343907594680786
+              ],
+              [
+                0.4338323771953583,
+                0.43366095423698425,
+                0.4336196482181549
+              ]
+            ],
+            "bias": -1.0399318933486938
+          },
+          "channel_1": {
+            "kernel": [
+              [
+                -0.6293050646781921,
+                -0.6293542385101318,
+                -0.6293143630027771
+              ],
+              [
+                -0.6291648149490356,
+                -1.0494621992111206,
+                -0.6293237805366516
+              ],
+              [
+                -0.6294297575950623,
+                -0.6294313669204712,
+                -0.6293166279792786
+              ]
+            ],
+            "bias": 1.8879756927490234
+          }
+        },
+        "conv2": {
+          "channel_0_weight": -2.4450862407684326,
+          "channel_1_weight": -4.1166605949401855,
+          "bias": 1.3245220184326172
+        }
+      },
+      "checkpoint_path": "/Users/liuyuxiang/Documents/USA/DeepLearningClass/project/experiments/maze_transfer/models/finetune_seed_20360.pth",
+      "history": [
+        {
+          "epoch": 1,
+          "train_acc": 0.9358501953125,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 2,
+          "train_acc": 0.951459765625,
+          "val_acc": 0.9511025390625
+        },
+        {
+          "epoch": 3,
+          "train_acc": 0.9987490234375,
+          "val_acc": 1.0
+        }
+      ],
+      "pretrained_model": "run_11_l2_seed_20100.pth",
+      "pretrained_seed": 20100,
+      "pretrained_reg_type": "l2",
+      "pretrained_convergence_epoch": 17
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "experiment": "Comprehensive Maze 2-Channel CNN Training",
+  "rule": {
+    "name": "Maze",
+    "survival": "1-5 neighbors",
+    "birth": "3 neighbors (same as GoL)"
+  },
+  "date": "2025-12-04 00:01:49",
+  "total_time_seconds": 2211.12534,
+  "total_time_minutes": 36.852089,
+  "configuration": {
+    "architecture": "2-channel CNN",
+    "num_runs_per_type": 100,
+    "total_runs": 300,
+    "max_epochs": 100,
+    "early_stopping_patience": 20,
+    "target_accuracy": 1.0,
+    "train_samples": 10000,
+    "val_samples": 2000,
+    "regularization_configs": {
+      "L1": {
+        "lambda": 0.001
+      },
+      "L2": {
+        "weight_decay": 0.001
+      },
+      "None": {}
+    }
+  },
+  "summary_statistics": {
+    "L1": {
+      "total_runs": 100,
+      "converged_count": 39,
+      "convergence_rate": 0.39,
+      "mean_convergence_epoch": 30.82051282051282,
+      "std_convergence_epoch": 6.570609755382519,
+      "min_convergence_epoch": 17,
+      "max_convergence_epoch": 43,
+      "best_non_converged_accuracy": 0.85035498046875
+    },
+    "L2": {
+      "total_runs": 100,
+      "converged_count": 37,
+      "convergence_rate": 0.37,
+      "mean_convergence_epoch": 29.027027027027028,
+      "std_convergence_epoch": 6.386161078738452,
+      "min_convergence_epoch": 14,
+      "max_convergence_epoch": 47,
+      "best_non_converged_accuracy": 0.85035498046875
+    },
+    "None": {
+      "total_runs": 100,
+      "converged_count": 25,
+      "convergence_rate": 0.25,
+      "mean_convergence_epoch": 29.0,
+      "std_convergence_epoch": 6.663332499583072,
+      "min_convergence_epoch": 7,
+      "max_convergence_epoch": 43,
+      "best_non_converged_accuracy": 0.86326953125
+    }
+  },
+  "saved_models_count": 101
+}

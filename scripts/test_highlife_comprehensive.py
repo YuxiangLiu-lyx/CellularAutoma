@@ -1,10 +1,15 @@
 """
-Comprehensive 2-Channel CNN Regularization Comparison.
+Comprehensive HighLife 2-Channel CNN Training.
 
-Compare L1, L2, and no regularization on 2-channel Game of Life CNN.
-Each configuration runs 30 times to establish statistical significance.
+Train 2-channel CNN on HighLife rule (similar to GoL, one extra birth condition).
+Compare L1, L2, and no regularization.
+Each configuration runs 30 times.
 
-Optimized version: validation in one batch, saves model checkpoints.
+HighLife vs GoL:
+- GoL: survive 2-3, birth 3
+- HighLife: survive 2-3, birth 3 OR 6
+
+Optimized: data preloaded to GPU, fast training.
 """
 import sys
 from pathlib import Path
@@ -17,12 +22,71 @@ from datetime import datetime
 
 sys.path.append(str(Path(__file__).parent.parent))
 
-from src.models.cnn import GameOfLifeCNN, count_parameters
-from src.utils.data_loader import create_dataloader
+from src.models.cnn import GameOfLifeCNN
+
+
+class HighLife:
+    """
+    HighLife cellular automaton - similar to Game of Life.
+    
+    Rules:
+        - Live cell with 2-3 neighbors survives (same as GoL)
+        - Dead cell with 3 OR 6 neighbors becomes alive (GoL: only 3)
+        - All other cells die or remain dead
+    """
+    
+    def __init__(self, grid_size=(32, 32)):
+        self.height, self.width = grid_size
+    
+    def step(self, state):
+        """Compute next state."""
+        neighbors = self._count_neighbors(state)
+        
+        # HighLife rule: survival 2-3, birth 3 or 6
+        survive = (neighbors == 2) | (neighbors == 3)
+        birth = (neighbors == 3) | (neighbors == 6)
+        
+        next_state = ((state == 1) & survive) | ((state == 0) & birth)
+        
+        return next_state.astype(np.uint8)
+    
+    def _count_neighbors(self, state):
+        """Count alive neighbors with periodic boundaries."""
+        neighbors = np.zeros_like(state, dtype=int)
+        
+        for di in [-1, 0, 1]:
+            for dj in [-1, 0, 1]:
+                if di == 0 and dj == 0:
+                    continue
+                shifted = np.roll(np.roll(state, di, axis=0), dj, axis=1)
+                neighbors += shifted
+        
+        return neighbors
+
+
+def generate_highlife_data(num_samples, grid_size=(32, 32), density_range=(0.1, 0.5)):
+    """Generate HighLife training data."""
+    simulator = HighLife(grid_size)
+    
+    states_t = []
+    states_t1 = []
+    
+    for _ in range(num_samples):
+        density = np.random.uniform(*density_range)
+        state = (np.random.random(grid_size) < density).astype(np.uint8)
+        next_state = simulator.step(state)
+        
+        states_t.append(state)
+        states_t1.append(next_state)
+    
+    X = np.array(states_t)[:, np.newaxis, :, :].astype(np.float32)
+    Y = np.array(states_t1)[:, np.newaxis, :, :].astype(np.float32)
+    
+    return torch.tensor(X), torch.tensor(Y)
 
 
 def set_seed(seed):
-    """Set random seed for reproducibility."""
+    """Set random seed."""
     torch.manual_seed(seed)
     np.random.seed(seed)
     if torch.cuda.is_available():
@@ -68,43 +132,18 @@ def extract_weights(model):
 def train_single_run(run_id, seed, reg_type, reg_strength, train_X, train_Y,
                      val_X, val_Y, criterion, device, save_dir=None,
                      max_epochs=100, target_accuracy=1.0, patience=20, batch_size=64):
-    """
-    Train one 2-channel model run with specified regularization.
-    
-    Args:
-        run_id: Run identifier
-        seed: Random seed
-        reg_type: 'l1', 'l2', or 'none'
-        reg_strength: Regularization strength
-        train_X, train_Y: Training data (tensor, preloaded)
-        val_X, val_Y: Validation data (tensor, preloaded)
-        criterion: Loss function
-        device: Computing device
-        save_dir: Directory to save model checkpoint
-        max_epochs: Maximum training epochs
-        target_accuracy: Target accuracy to reach
-        patience: Early stopping patience
-        batch_size: Batch size for training
-        
-    Returns:
-        Dictionary with run results
-    """
+    """Train one 2-channel model run with specified regularization."""
     set_seed(seed)
     
-    # Create 2-channel model
     model = GameOfLifeCNN(hidden_channels=2, padding_mode='circular')
     model = model.to(device)
     
-    # Setup optimizer based on regularization type
     if reg_type == 'l2':
         optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=reg_strength)
     else:
         optimizer = optim.Adam(model.parameters(), lr=0.001)
     
-    # Data already on device (passed from main)
-    
     best_val_acc = 0
-    best_model_state = None
     convergence_epoch = -1
     epoch_history = []
     epochs_without_improvement = 0
@@ -112,7 +151,6 @@ def train_single_run(run_id, seed, reg_type, reg_strength, train_X, train_Y,
     n_samples = len(train_X)
     
     for epoch in range(max_epochs):
-        # Training - direct indexing
         model.train()
         train_correct = 0
         train_total = 0
@@ -127,10 +165,8 @@ def train_single_run(run_id, seed, reg_type, reg_strength, train_X, train_Y,
             optimizer.zero_grad()
             output = model(batch_X)
             
-            # Base loss
             bce_loss = criterion(output, batch_Y)
             
-            # Add L1 regularization if needed
             if reg_type == 'l1':
                 l1_loss = compute_l1_loss(model, reg_strength)
                 loss = bce_loss + l1_loss
@@ -161,37 +197,22 @@ def train_single_run(run_id, seed, reg_type, reg_strength, train_X, train_Y,
             'val_acc': float(val_acc)
         })
         
-        # Check for improvement
         if val_acc > best_val_acc:
             best_val_acc = val_acc
-            best_model_state = model.state_dict().copy()
             epochs_without_improvement = 0
         else:
             epochs_without_improvement += 1
         
-        # Check convergence
         if val_acc >= target_accuracy and convergence_epoch == -1:
             convergence_epoch = epoch + 1
             break
         
-        # Early stopping
         if epochs_without_improvement >= patience:
             break
     
-    # Extract final weights
     weights = extract_weights(model)
     
-    # Analyze channel norms
-    conv1_weights = model.conv1.weight.data.cpu().numpy()
-    channel_l1_norms = []
-    channel_l2_norms = []
-    for i in range(2):
-        l1_norm = np.sum(np.abs(conv1_weights[i]))
-        l2_norm = np.sqrt(np.sum(conv1_weights[i]**2))
-        channel_l1_norms.append(float(l1_norm))
-        channel_l2_norms.append(float(l2_norm))
-    
-    # Save model checkpoint if converged
+    # Save checkpoint if converged
     checkpoint_path = None
     if save_dir and convergence_epoch != -1:
         save_dir = Path(save_dir)
@@ -218,9 +239,6 @@ def train_single_run(run_id, seed, reg_type, reg_strength, train_X, train_Y,
         'final_val_acc': float(val_acc),
         'best_val_acc': float(best_val_acc),
         'total_epochs_trained': len(epoch_history),
-        'stopped_early': epochs_without_improvement >= patience and convergence_epoch == -1,
-        'channel_l1_norms': channel_l1_norms,
-        'channel_l2_norms': channel_l2_norms,
         'weights': weights,
         'checkpoint_path': str(checkpoint_path) if checkpoint_path else None,
         'epoch_history': epoch_history
@@ -228,11 +246,8 @@ def train_single_run(run_id, seed, reg_type, reg_strength, train_X, train_Y,
 
 
 def main():
-    """Main experiment function."""
     project_root = Path(__file__).parent.parent
-    data_dir = project_root / "data" / "processed"
-    
-    output_dir = project_root / "experiments" / "2ch_comprehensive"
+    output_dir = project_root / "experiments" / "highlife_comprehensive"
     output_dir.mkdir(parents=True, exist_ok=True)
     models_dir = output_dir / "models"
     models_dir.mkdir(parents=True, exist_ok=True)
@@ -245,49 +260,29 @@ def main():
         device = torch.device('cpu')
     
     print("="*70)
-    print("COMPREHENSIVE 2-CHANNEL CNN REGULARIZATION COMPARISON")
+    print("COMPREHENSIVE HIGHLIFE 2-CHANNEL CNN TRAINING")
     print("="*70)
     print(f"Device: {device}")
+    print(f"\nHighLife Rule:")
+    print(f"  - Live cell survives with 2-3 neighbors (same as GoL)")
+    print(f"  - Dead cell births with 3 OR 6 neighbors (GoL: only 3)")
     print(f"\nExperiment Design:")
-    print(f"  - Architecture: 2-channel CNN (minimum capacity)")
+    print(f"  - Architecture: 2-channel CNN")
     print(f"  - Regularization types: L1, L2, None")
-    print(f"  - Runs per type: 30")
-    print(f"  - Total runs: 90")
+    print(f"  - Runs per type: 100")
+    print(f"  - Total runs: 300")
     print(f"  - Max epochs per run: 100")
     print(f"  - Early stopping patience: 20 epochs")
     print(f"  - Target accuracy: 100%")
     print(f"\nOutput directory: {output_dir}")
     
-    # Preload ALL data to memory for fast training
-    print(f"\nPreloading all data to memory...")
+    # Generate and preload data
+    print(f"\nGenerating HighLife data...")
+    np.random.seed(42)  # Fixed seed for data generation
+    train_X, train_Y = generate_highlife_data(10000, grid_size=(32, 32))
+    val_X, val_Y = generate_highlife_data(2000, grid_size=(32, 32))
     
-    train_loader = create_dataloader(
-        data_dir / "train.h5",
-        batch_size=64,
-        shuffle=False
-    )
-    train_X_list = []
-    train_Y_list = []
-    for x, y in train_loader:
-        train_X_list.append(x)
-        train_Y_list.append(y)
-    train_X = torch.cat(train_X_list, dim=0)
-    train_Y = torch.cat(train_Y_list, dim=0)
-    
-    val_loader = create_dataloader(
-        data_dir / "val.h5",
-        batch_size=64,
-        shuffle=False
-    )
-    val_X_list = []
-    val_Y_list = []
-    for x, y in val_loader:
-        val_X_list.append(x)
-        val_Y_list.append(y)
-    val_X = torch.cat(val_X_list, dim=0)
-    val_Y = torch.cat(val_Y_list, dim=0)
-    
-    # Move all data to device once
+    # Move to device once
     train_X = train_X.to(device)
     train_Y = train_Y.to(device)
     val_X = val_X.to(device)
@@ -298,9 +293,8 @@ def main():
     print(f"Data moved to: {device}")
     
     criterion = nn.BCELoss()
-    num_runs_per_type = 30
+    num_runs_per_type = 100
     
-    # Configuration for each regularization type
     configs = [
         {'name': 'L1', 'reg_type': 'l1', 'reg_strength': 0.001, 'base_seed': 10000},
         {'name': 'L2', 'reg_type': 'l2', 'reg_strength': 0.001, 'base_seed': 20000},
@@ -358,10 +352,11 @@ def main():
             else:
                 print(f" Did not converge (best: {result['best_val_acc']:.4f})")
         
-        # Save individual results for this regularization type
+        # Save results for this regularization type
         results_file = output_dir / f"results_{reg_type}.json"
         with open(results_file, 'w') as f:
             json.dump({
+                'rule': 'HighLife',
                 'regularization': name,
                 'reg_type': reg_type,
                 'reg_strength': reg_strength,
@@ -376,7 +371,7 @@ def main():
     end_time = datetime.now()
     total_time = (end_time - start_time).total_seconds()
     
-    # Generate summary statistics
+    # Summary
     print("\n" + "="*70)
     print("FINAL SUMMARY")
     print("="*70)
@@ -391,18 +386,15 @@ def main():
         if converged:
             convergence_epochs = [r['convergence_epoch'] for r in converged]
             mean_epoch = np.mean(convergence_epochs)
-            median_epoch = np.median(convergence_epochs)
             std_epoch = np.std(convergence_epochs)
             min_epoch = np.min(convergence_epochs)
             max_epoch = np.max(convergence_epochs)
         else:
             mean_epoch = None
-            median_epoch = None
             std_epoch = None
             min_epoch = None
             max_epoch = None
         
-        # Best accuracy among non-converged runs
         non_converged = [r for r in results if not r['converged']]
         if non_converged:
             best_non_converged_acc = max(r['best_val_acc'] for r in non_converged)
@@ -414,7 +406,6 @@ def main():
             'converged_count': converged_count,
             'convergence_rate': float(convergence_rate),
             'mean_convergence_epoch': float(mean_epoch) if mean_epoch else None,
-            'median_convergence_epoch': float(median_epoch) if median_epoch else None,
             'std_convergence_epoch': float(std_epoch) if std_epoch else None,
             'min_convergence_epoch': int(min_epoch) if min_epoch else None,
             'max_convergence_epoch': int(max_epoch) if max_epoch else None,
@@ -425,18 +416,21 @@ def main():
         print(f"  Converged: {converged_count}/{num_runs_per_type} ({convergence_rate*100:.1f}%)")
         if converged:
             print(f"  Mean convergence epoch: {mean_epoch:.1f}")
-            print(f"  Median convergence epoch: {median_epoch:.1f}")
             print(f"  Std: {std_epoch:.1f} epochs")
             print(f"  Range: {min_epoch}-{max_epoch} epochs")
         if non_converged:
             print(f"  Best non-converged accuracy: {best_non_converged_acc:.4f}")
     
-    # Count saved models
+    # Save summary
     saved_models = list(models_dir.glob("*.pth"))
     
-    # Save final summary
     final_summary = {
-        'experiment': 'Comprehensive 2-Channel CNN Regularization Comparison',
+        'experiment': 'Comprehensive HighLife 2-Channel CNN Training',
+        'rule': {
+            'name': 'HighLife',
+            'survival': '2-3 neighbors (same as GoL)',
+            'birth': '3 OR 6 neighbors'
+        },
         'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'total_time_seconds': total_time,
         'total_time_minutes': total_time / 60,
@@ -447,6 +441,8 @@ def main():
             'max_epochs': 100,
             'early_stopping_patience': 20,
             'target_accuracy': 1.0,
+            'train_samples': 10000,
+            'val_samples': 2000,
             'regularization_configs': {
                 'L1': {'lambda': 0.001},
                 'L2': {'weight_decay': 0.001},
@@ -464,15 +460,15 @@ def main():
     print(f"\n{'='*70}")
     print(f"Experiment Complete!")
     print(f"{'='*70}")
-    print(f"Total time: {total_time/60:.1f} minutes ({total_time/3600:.2f} hours)")
+    print(f"Total time: {total_time/60:.1f} minutes")
     print(f"Results saved to: {output_dir}")
-    print(f"  - results_l1.json: L1 regularization (30 runs)")
-    print(f"  - results_l2.json: L2 regularization (30 runs)")
-    print(f"  - results_none.json: No regularization (30 runs)")
-    print(f"  - summary.json: Final statistics")
+    print(f"  - results_l1.json")
+    print(f"  - results_l2.json")
+    print(f"  - results_none.json")
+    print(f"  - summary.json")
     print(f"  - models/: {len(saved_models)} converged model checkpoints")
     
-    # Quick comparison
+    # Comparison
     print(f"\n{'='*70}")
     print("CONVERGENCE RATE COMPARISON")
     print(f"{'='*70}")
@@ -481,10 +477,8 @@ def main():
     
     for i, (name, rate) in enumerate(rates, 1):
         count = summary_stats[name]['converged_count']
-        print(f"{i}. {name:6s}: {count}/30 ({rate*100:.1f}%)")
+        print(f"{i}. {name:6s}: {count}/{num_runs_per_type} ({rate*100:.1f}%)")
     
-    best = rates[0]
-    print(f"\nBest performing: {best[0]} with {best[1]*100:.1f}% convergence rate")
     print(f"{'='*70}")
 
 
