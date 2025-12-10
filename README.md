@@ -12,7 +12,7 @@ Neural network models for learning Conway's Game of Life rules using convolution
 | 10-ch direct training | `experiments/direct_training/` | 10ch, no pruning | 100% accuracy, 24 epochs |
 | 4-ch convergence | `experiments/4ch_convergence/` | 4ch, L1=0.001, 10 runs | 100% convergence, avg 16.8 epochs |
 | 2-ch convergence (L1) | `experiments/2ch_convergence/` | 2ch, L1=0.001, 5 runs | 80% convergence, avg 21 epochs; 1 model 100% on all 512 patterns |
-| 2-ch comprehensive | `experiments/2ch_comprehensive/` | 2ch, L1/L2/None, 90 runs | L2 best (43.3%), L1 (36.7%), None (16.7%) |
+| 2-ch comprehensive | `experiments/2ch_comprehensive/` | 2ch, L1/L2/None, 300 runs | L2 best (47.0%), L1 (44.0%), None (28.0%) |
 | Maze 2-ch comprehensive | `experiments/maze_comprehensive/` | Maze rule, 2ch, L1/L2/None, 300 runs | 25–39% convergence depending on regularization |
 | Maze transfer from GoL | `experiments/maze_transfer/` | 2ch, fine-tune from 36 converged GoL models | 36/36 convergence, avg 3.1 epochs |
 
@@ -20,7 +20,7 @@ Neural network models for learning Conway's Game of Life rules using convolution
 
 1. **Minimum Architecture**: 2 channels can solve Game of Life (~23 parameters) – a 2‑channel CNN reached 100% accuracy on all 512 possible 3×3 patterns, but 4 channels provide more reliable convergence.
 
-2. **Lottery Ticket & Regularization Effect**: For 2‑channel models on GoL (90 runs), convergence rates are 5/30 (16.7%) with no regularization, 11/30 (36.7%) with L1, and 13/30 (43.3%) with L2, showing that good initializations are rare without regularization and that L2 works best when we want channels to behave uniformly (neighbors play symmetric roles).
+2. **Lottery Ticket & Regularization Effect**: For 2‑channel models on GoL (now 300 runs in `experiments/2ch_comprehensive/`), convergence rates are 28/100 (28.0%) with no regularization, 44/100 (44.0%) with L1, and 47/100 (47.0%) with L2, showing that good initializations are still relatively rare without regularization and that L2 continues to work best when we want channels to behave uniformly (neighbors play symmetric roles).
 
 3. **Rule Continuity vs Capacity**: GoL (B3/S23) and Maze (B3/S12345) both have survival on continuous neighbor intervals, and 2‑channel CNNs can learn them (many runs reach 100% for both rules). In contrast, the HighLife rule (B36/S23) has a disjoint birth set {3, 6}; theoretically a 2‑channel model that operates on “center + neighbor count” cannot carve out such a disconnected region cleanly. In our HighLife 2‑channel runs (30 attempts, no converged checkpoints saved in `experiments/highlife_comprehensive/`), the observed convergence rate was effectively 0/30.
 

@@ -295,58 +295,6 @@ def main():
     
     print(f"\nSummary saved to: {summary_path}")
     
-    # Create README
-    readme_path = output_dir / "README.md"
-    with open(readme_path, 'w') as f:
-        f.write(f"# 4-Channel CNN Convergence Test (No L1 Regularization)\n\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-        
-        f.write(f"## Experiment Design\n\n")
-        f.write(f"- **Objective**: Test if 4-channel CNN can reach 100% accuracy WITHOUT L1 regularization\n")
-        f.write(f"- **Hypothesis**: Maybe L1 is not necessary, just need enough training epochs\n")
-        f.write(f"- **Configuration**: No L1 regularization, only BCE loss\n")
-        f.write(f"- **Number of runs**: 30\n")
-        f.write(f"- **Seeds**: {seeds[0]} to {seeds[-1]}\n\n")
-        
-        f.write(f"## Results\n\n")
-        f.write(f"- **Convergence rate**: {converged_count}/30 ({converged_count/30*100:.1f}%)\n")
-        
-        if convergence_epochs:
-            f.write(f"- **Mean convergence**: {np.mean(convergence_epochs):.1f} epochs\n")
-            f.write(f"- **Median convergence**: {np.median(convergence_epochs):.1f} epochs\n")
-            f.write(f"- **Range**: {np.min(convergence_epochs)}-{np.max(convergence_epochs)} epochs\n")
-            f.write(f"- **Std deviation**: {np.std(convergence_epochs):.1f} epochs\n\n")
-            
-            f.write(f"## Analysis\n\n")
-            if converged_count == 30:
-                f.write(f"All 30 runs converged without L1 regularization.\n\n")
-                f.write(f"L1 is not necessary for 4 channels with sufficient epochs.\n")
-            elif converged_count >= 25:
-                f.write(f"{converged_count}/30 runs converged.\n\n")
-                f.write(f"L1 may help but is not critical.\n")
-            elif converged_count >= 15:
-                f.write(f"{converged_count}/30 runs converged.\n\n")
-                f.write(f"L1 regularization helps improve convergence.\n")
-            else:
-                f.write(f"Only {converged_count}/30 runs converged.\n\n")
-                f.write(f"L1 regularization is beneficial for 4 channels.\n")
-        else:
-            f.write(f"\n**FAILED**: No runs converged WITHOUT L1.\n\n")
-            f.write(f"This proves L1 regularization is **essential** for 4-channel models.\n")
-        
-        f.write(f"\n## Comparison with L1 Regularization\n\n")
-        f.write(f"To compare, run the test with L1 (lambda=0.001):\n")
-        f.write(f"```bash\n")
-        f.write(f"python scripts/test_4ch_convergence.py\n")
-        f.write(f"```\n\n")
-        
-        f.write(f"## Files\n\n")
-        f.write(f"- `summary.json` - Complete experimental data\n")
-        f.write(f"- `models/` - Saved models from successful runs\n")
-        f.write(f"- `README.md` - This file\n")
-    
-    print(f"README saved to: {readme_path}")
-    
     print("\n" + "="*70)
     print("Experiment Complete")
     print("="*70)

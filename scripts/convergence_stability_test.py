@@ -303,44 +303,6 @@ def main():
     
     print(f"\nSummary saved to: {summary_path}")
     
-    readme_path = output_dir / "README.md"
-    with open(readme_path, 'w') as f:
-        f.write(f"# Convergence Stability Test\n\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-        
-        f.write(f"## Experiment Design\n\n")
-        f.write(f"- **Objective**: Test convergence stability of 16-channel CNN with L1 regularization\n")
-        f.write(f"- **Configuration**: lambda_l1 = 0.001\n")
-        f.write(f"- **Number of runs**: 30\n")
-        f.write(f"- **Seeds**: {seeds[0]} to {seeds[-1]}\n\n")
-        
-        f.write(f"## Results\n\n")
-        f.write(f"- **Convergence rate**: {converged_count}/30 ({converged_count/30*100:.1f}%)\n")
-        
-        if convergence_epochs:
-            f.write(f"- **Mean convergence**: {np.mean(convergence_epochs):.1f} epochs\n")
-            f.write(f"- **Median convergence**: {np.median(convergence_epochs):.1f} epochs\n")
-            f.write(f"- **Range**: {np.min(convergence_epochs)}-{np.max(convergence_epochs)} epochs\n")
-            f.write(f"- **Std deviation**: {np.std(convergence_epochs):.1f} epochs\n\n")
-            
-            f.write(f"## Analysis\n\n")
-            if np.std(convergence_epochs) < 5:
-                f.write(f"**Highly stable convergence** (std < 5 epochs)\n\n")
-                f.write(f"L1 regularization provides consistent convergence across different initializations.\n")
-            elif np.std(convergence_epochs) < 10:
-                f.write(f"**Moderately stable convergence** (std < 10 epochs)\n\n")
-                f.write(f"Most runs converge within a similar timeframe.\n")
-            else:
-                f.write(f"**Variable convergence** (std >= 10 epochs)\n\n")
-                f.write(f"Convergence time depends significantly on initialization.\n")
-        
-        f.write(f"\n## Files\n\n")
-        f.write(f"- `summary.json` - Complete experimental data\n")
-        f.write(f"- `models/` - Saved models from each run\n")
-        f.write(f"- `README.md` - This file\n")
-    
-    print(f"README saved to: {readme_path}")
-    
     print("\n" + "="*70)
     print("Experiment Complete")
     print("="*70)
@@ -350,4 +312,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

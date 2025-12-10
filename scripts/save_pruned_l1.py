@@ -162,57 +162,6 @@ def main():
     
     print(f"Documentation saved to: {doc_save_path}")
     
-    readme_path = output_dir / "README.md"
-    with open(readme_path, 'w') as f:
-        f.write(f"# L1 Regularization Pruned Model\n\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-        
-        f.write(f"## Summary\n\n")
-        f.write(f"- **Method**: L1 Regularization (lambda={checkpoint.get('lambda_l1', 0.001)})\n")
-        f.write(f"- **Original Channels**: 16\n")
-        f.write(f"- **Active Channels**: {len(active_channels)}\n")
-        f.write(f"- **Pruned Channels**: {len(prunable_channels)}\n")
-        f.write(f"- **Accuracy**: {checkpoint.get('val_accuracy', 0)*100:.2f}%\n")
-        f.write(f"- **Parameter Reduction**: {sparsity:.1f}%\n\n")
-        
-        f.write(f"## Channel Analysis\n\n")
-        f.write(f"### Active Channels (L1 norm >= {threshold})\n")
-        f.write(f"```\n")
-        for i in active_channels:
-            f.write(f"Channel {i:2d}: L1 norm = {channel_l1_norms[i]:.4f}\n")
-        f.write(f"```\n\n")
-        
-        f.write(f"### Pruned Channels (L1 norm < {threshold})\n")
-        f.write(f"```\n")
-        for i in prunable_channels:
-            f.write(f"Channel {i:2d}: L1 norm = {channel_l1_norms[i]:.4f}\n")
-        f.write(f"```\n\n")
-        
-        f.write(f"## Key Findings\n\n")
-        for finding in documentation['key_findings']:
-            f.write(f"- {finding}\n")
-        f.write(f"\n")
-        
-        f.write(f"## Files\n\n")
-        f.write(f"- `model.pth` - Pruned model parameters\n")
-        f.write(f"- `pruning_report.json` - Detailed pruning statistics and metadata\n")
-        f.write(f"- `README.md` - This file\n\n")
-        
-        f.write(f"## Usage\n\n")
-        f.write(f"```python\n")
-        f.write(f"import torch\n")
-        f.write(f"from src.models.cnn import GameOfLifeCNN\n\n")
-        f.write(f"# Load pruned model\n")
-        f.write(f"checkpoint = torch.load('models/pruned_l1/model.pth')\n")
-        f.write(f"model = GameOfLifeCNN(hidden_channels=16, padding_mode='circular')\n")
-        f.write(f"model.load_state_dict(checkpoint['model_state_dict'])\n\n")
-        f.write(f"# Check which channels are active\n")
-        f.write(f"print(f\"Active channels: {{checkpoint['active_channels']}}\")\n")
-        f.write(f"print(f\"Pruned channels: {{checkpoint['pruned_channels']}}\")\n")
-        f.write(f"```\n")
-    
-    print(f"README saved to: {readme_path}")
-    
     print("\n" + "="*70)
     print("Summary")
     print("="*70)
@@ -230,4 +179,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

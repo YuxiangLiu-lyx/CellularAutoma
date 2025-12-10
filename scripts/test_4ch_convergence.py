@@ -308,49 +308,6 @@ def main():
     
     print(f"\nSummary saved to: {summary_path}")
     
-    # Create README
-    readme_path = output_dir / "README.md"
-    with open(readme_path, 'w') as f:
-        f.write(f"# 4-Channel CNN Convergence Test\n\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-        
-        f.write(f"## Experiment Design\n\n")
-        f.write(f"- **Objective**: Test if 4-channel CNN can reach 100% accuracy\n")
-        f.write(f"- **Motivation**: Push the pruning limit to see minimum viable channels\n")
-        f.write(f"- **Configuration**: lambda_l1 = 0.001\n")
-        f.write(f"- **Number of runs**: 10\n")
-        f.write(f"- **Seeds**: {seeds[0]} to {seeds[-1]}\n\n")
-        
-        f.write(f"## Results\n\n")
-        f.write(f"- **Convergence rate**: {converged_count}/10 ({converged_count/10*100:.1f}%)\n")
-        
-        if convergence_epochs:
-            f.write(f"- **Mean convergence**: {np.mean(convergence_epochs):.1f} epochs\n")
-            f.write(f"- **Median convergence**: {np.median(convergence_epochs):.1f} epochs\n")
-            f.write(f"- **Range**: {np.min(convergence_epochs)}-{np.max(convergence_epochs)} epochs\n")
-            f.write(f"- **Std deviation**: {np.std(convergence_epochs):.1f} epochs\n\n")
-            
-            f.write(f"## Analysis\n\n")
-            if converged_count == 10:
-                f.write(f"All 10 runs converged to 100% accuracy.\n\n")
-                f.write(f"4 channels are sufficient (~29 params vs 177 for 16-channel).\n")
-            elif converged_count >= 7:
-                f.write(f"{converged_count}/10 runs converged.\n\n")
-                f.write(f"4 channels are likely sufficient with tuning.\n")
-            else:
-                f.write(f"Only {converged_count}/10 runs converged.\n\n")
-                f.write(f"4 channels may be insufficient. Consider 5-6 channels.\n")
-        else:
-            f.write(f"\n**FAILED**: No runs converged to 100% accuracy.\n\n")
-            f.write(f"4 channels are **insufficient** for this task.\n")
-        
-        f.write(f"\n## Files\n\n")
-        f.write(f"- `summary.json` - Complete experimental data\n")
-        f.write(f"- `models/` - Saved models from successful runs\n")
-        f.write(f"- `README.md` - This file\n")
-    
-    print(f"README saved to: {readme_path}")
-    
     print("\n" + "="*70)
     print("Experiment Complete")
     print("="*70)

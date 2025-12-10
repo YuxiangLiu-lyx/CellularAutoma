@@ -234,62 +234,10 @@ def main():
             'history': epoch_history
         }, f, indent=2)
     
-    # Save README
-    readme_path = output_dir / "README.md"
-    with open(readme_path, 'w') as f:
-        f.write(f"# 10-Channel CNN Direct Training\n\n")
-        f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-        
-        f.write(f"## Summary\n\n")
-        f.write(f"- **Architecture**: GameOfLifeCNN with 10 channels\n")
-        f.write(f"- **Training Method**: Direct training (no pruning)\n")
-        f.write(f"- **Parameters**: {count_parameters(model):,}\n")
-        f.write(f"- **Best Accuracy**: {best_val_acc*100:.2f}%\n")
-        f.write(f"- **Converged**: {'Yes' if best_val_acc >= target_accuracy else 'No'}\n")
-        f.write(f"- **Training Epochs**: {epoch_history[-1]['epoch']}\n\n")
-        
-        f.write(f"## Motivation\n\n")
-        f.write(f"Based on L1 regularization experiments, we found that only 10 out of 16 channels are needed.\n")
-        f.write(f"This experiment tests if training a 10-channel model directly (without pruning) can achieve 100% accuracy.\n\n")
-        
-        f.write(f"## Results\n\n")
-        if best_val_acc >= target_accuracy:
-            f.write(f"10 channels are sufficient.\n\n")
-            f.write(f"- Achieved {best_val_acc*100:.2f}% accuracy\n")
-            f.write(f"- Validates L1 pruning findings\n")
-            f.write(f"- Can train 10-channel model directly without pruning\n")
-        else:
-            f.write(f"Partial success: Reached {best_val_acc*100:.2f}% accuracy\n\n")
-            f.write(f"- Did not reach 100% in {max_epochs} epochs\n")
-            f.write(f"- May need more training or different approach\n")
-        
-        f.write(f"\n## Comparison\n\n")
-        f.write(f"| Approach | Channels | Parameters | Accuracy |\n")
-        f.write(f"|----------|----------|------------|----------|\n")
-        f.write(f"| Original 16-ch | 16 | 177 | 100.00% |\n")
-        f.write(f"| L1 Pruned (16→10) | 10 active | ~111 | 100.00% |\n")
-        f.write(f"| Direct 10-ch | 10 | {count_parameters(model)} | {best_val_acc*100:.2f}% |\n\n")
-        
-        f.write(f"## Files\n\n")
-        f.write(f"- `cnn_10ch.pth` - Trained model parameters\n")
-        f.write(f"- `training_history.json` - Epoch-by-epoch training log\n")
-        f.write(f"- `README.md` - This file\n\n")
-        
-        f.write(f"## Usage\n\n")
-        f.write(f"```python\n")
-        f.write(f"import torch\n")
-        f.write(f"from src.models.cnn import GameOfLifeCNN\n\n")
-        f.write(f"checkpoint = torch.load('experiments/direct_training/cnn_10ch.pth')\n")
-        f.write(f"model = GameOfLifeCNN(hidden_channels=10, padding_mode='circular')\n")
-        f.write(f"model.load_state_dict(checkpoint['model_state_dict'])\n")
-        f.write(f"```\n")
-    
     print(f"\nAll files saved to: {output_dir}")
     print(f"  - cnn_10ch.pth (model)")
     print(f"  - training_history.json (training log)")
-    print(f"  - README.md (documentation)")
 
 
 if __name__ == "__main__":
     main()
-

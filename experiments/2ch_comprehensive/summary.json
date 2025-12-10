@@ -1,12 +1,12 @@
 {
   "experiment": "Comprehensive 2-Channel CNN Regularization Comparison",
-  "date": "2025-12-03 18:13:00",
-  "total_time_seconds": 560.674059,
-  "total_time_minutes": 9.34456765,
+  "date": "2025-12-05 01:04:13",
+  "total_time_seconds": 2598.29892,
+  "total_time_minutes": 43.304982,
   "configuration": {
     "architecture": "2-channel CNN",
-    "num_runs_per_type": 30,
-    "total_runs": 90,
+    "num_runs_per_type": 100,
+    "total_runs": 300,
     "max_epochs": 100,
     "early_stopping_patience": 20,
     "target_accuracy": 1.0,
@@ -22,38 +22,38 @@
   },
   "summary_statistics": {
     "L1": {
-      "total_runs": 30,
-      "converged_count": 11,
-      "convergence_rate": 0.36666666666666664,
-      "mean_convergence_epoch": 19.454545454545453,
-      "median_convergence_epoch": 18.0,
-      "std_convergence_epoch": 6.020625705381254,
+      "total_runs": 100,
+      "converged_count": 44,
+      "convergence_rate": 0.44,
+      "mean_convergence_epoch": 21.25,
+      "median_convergence_epoch": 21.0,
+      "std_convergence_epoch": 5.317744737283757,
       "min_convergence_epoch": 9,
       "max_convergence_epoch": 35,
       "best_non_converged_accuracy": 0.8223271484375
     },
     "L2": {
-      "total_runs": 30,
-      "converged_count": 13,
-      "convergence_rate": 0.43333333333333335,
-      "mean_convergence_epoch": 19.846153846153847,
-      "median_convergence_epoch": 21.0,
-      "std_convergence_epoch": 6.419275706161558,
+      "total_runs": 100,
+      "converged_count": 47,
+      "convergence_rate": 0.47,
+      "mean_convergence_epoch": 21.80851063829787,
+      "median_convergence_epoch": 22.0,
+      "std_convergence_epoch": 7.111986579075543,
       "min_convergence_epoch": 8,
-      "max_convergence_epoch": 31,
+      "max_convergence_epoch": 48,
       "best_non_converged_accuracy": 0.80568310546875
     },
     "None": {
-      "total_runs": 30,
-      "converged_count": 5,
-      "convergence_rate": 0.16666666666666666,
-      "mean_convergence_epoch": 17.6,
-      "median_convergence_epoch": 17.0,
-      "std_convergence_epoch": 8.73155198117723,
+      "total_runs": 100,
+      "converged_count": 28,
+      "convergence_rate": 0.28,
+      "mean_convergence_epoch": 20.607142857142858,
+      "median_convergence_epoch": 20.0,
+      "std_convergence_epoch": 8.178103542449216,
       "min_convergence_epoch": 8,
-      "max_convergence_epoch": 28,
+      "max_convergence_epoch": 47,
       "best_non_converged_accuracy": 0.88263037109375
     }
   },
-  "saved_models_count": 29
+  "saved_models_count": 119
 }

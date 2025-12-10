@@ -2,7 +2,7 @@
 Comprehensive 2-Channel CNN Regularization Comparison.
 
 Compare L1, L2, and no regularization on 2-channel Game of Life CNN.
-Each configuration runs 30 times to establish statistical significance.
+Each configuration runs 100 times to establish statistical significance.
 
 Optimized version: validation in one batch, saves model checkpoints.
 """
@@ -251,8 +251,8 @@ def main():
     print(f"\nExperiment Design:")
     print(f"  - Architecture: 2-channel CNN (minimum capacity)")
     print(f"  - Regularization types: L1, L2, None")
-    print(f"  - Runs per type: 30")
-    print(f"  - Total runs: 90")
+    print(f"  - Runs per type: 100")
+    print(f"  - Total runs: 300")
     print(f"  - Max epochs per run: 100")
     print(f"  - Early stopping patience: 20 epochs")
     print(f"  - Target accuracy: 100%")
@@ -298,7 +298,7 @@ def main():
     print(f"Data moved to: {device}")
     
     criterion = nn.BCELoss()
-    num_runs_per_type = 30
+    num_runs_per_type = 100
     
     # Configuration for each regularization type
     configs = [
@@ -466,9 +466,9 @@ def main():
     print(f"{'='*70}")
     print(f"Total time: {total_time/60:.1f} minutes ({total_time/3600:.2f} hours)")
     print(f"Results saved to: {output_dir}")
-    print(f"  - results_l1.json: L1 regularization (30 runs)")
-    print(f"  - results_l2.json: L2 regularization (30 runs)")
-    print(f"  - results_none.json: No regularization (30 runs)")
+    print(f"  - results_l1.json: L1 regularization ({num_runs_per_type} runs)")
+    print(f"  - results_l2.json: L2 regularization ({num_runs_per_type} runs)")
+    print(f"  - results_none.json: No regularization ({num_runs_per_type} runs)")
     print(f"  - summary.json: Final statistics")
     print(f"  - models/: {len(saved_models)} converged model checkpoints")
     
@@ -481,7 +481,7 @@ def main():
     
     for i, (name, rate) in enumerate(rates, 1):
         count = summary_stats[name]['converged_count']
-        print(f"{i}. {name:6s}: {count}/30 ({rate*100:.1f}%)")
+        print(f"{i}. {name:6s}: {count}/{num_runs_per_type} ({rate*100:.1f}%)")
     
     best = rates[0]
     print(f"\nBest performing: {best[0]} with {best[1]*100:.1f}% convergence rate")
